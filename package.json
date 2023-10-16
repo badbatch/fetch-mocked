@@ -1,7 +1,7 @@
 {
   "name": "yamf",
   "description": "A test framework integrated fetch mocking solution.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Dylan Aubrey",
   "license": "MIT",
   "homepage": "https://github.com/badbatch/yet-another-mocked-fetch",

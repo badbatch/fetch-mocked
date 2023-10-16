@@ -26,7 +26,7 @@
     "lint": "eslint . --ext .ts,.cjs",
     "repodog": "repodog",
     "syncpack": "syncpack",
-    "test": "node --require=suppress-experimental-warnings --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "node --require=suppress-experimental-warnings --experimental-vm-modules node_modules/jest/bin/jest.js --passWithNoTests",
     "type-check": "tsc --noEmit",
     "validate": "syncpack format && syncpack lint-semver-ranges && pnpm run build && pnpm run lint && pnpm run type-check && pnpm run test"
   },

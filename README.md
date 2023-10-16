@@ -1,4 +1,4 @@
-# yamf
+# yamf (yet another mock fetch)
 
 A test framework integrated fetch mocking solution.
 

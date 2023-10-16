@@ -1,3 +1,9 @@
+#### 0.0.3 (2023-10-16)
+
+##### Chores
+
+*  change name of project (436b4da3)
+
 #### 0.0.2 (2023-10-16)
 
 ##### Documentation Changes

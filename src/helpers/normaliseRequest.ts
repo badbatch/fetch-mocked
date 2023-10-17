@@ -23,7 +23,7 @@ export const normaliseHeaders = (headers?: HeadersInit) => {
     const normalisedHeaders: Record<string, string> = {};
 
     for (const [key, value] of entries) {
-      normalisedHeaders[key] = value;
+      normalisedHeaders[key.toLowerCase()] = value;
     }
 
     return normalisedHeaders;

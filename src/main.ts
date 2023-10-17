@@ -1,122 +1,189 @@
 import { createMockImplementation } from './helpers/createMockImplementation.ts';
-import { jsonToZod } from './helpers/jsonToZod.ts';
-import { normaliseMatcher } from './helpers/normaliseMatcher.ts';
-import type { Matcher, MockFetch, MockFunc, MockOptions, MockSignature, ResOptions } from './types.ts';
+import { injectMethod } from './helpers/injectMethod.ts';
+import { normaliseMatcherObj } from './helpers/normaliseMatcherObj.ts';
+import { normaliseRequestOptions } from './helpers/normaliseRequestOptions.ts';
+import { transformMatcherObjToZod } from './helpers/transformMatcherObjToZod.ts';
+import type {
+  ImplicitMethodMatcher,
+  Matcher,
+  MockFetch,
+  MockFetchOptions,
+  MockFunc,
+  MockOptions,
+  ResponseOptions,
+} from './types.ts';
 
 const globalFetch = globalThis.fetch;
 
-export const mockFetch = (mockFunc: () => MockFunc) => {
+export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetchOptions) => {
   globalThis.fetch = mockFunc();
 
-  const mockedFetch = globalThis.fetch as MockFetch & {
-    mockDelete: MockSignature;
-    mockDeleteOnce: MockSignature;
-    mockGet: MockSignature;
-    mockGetOnce: MockSignature;
-    mockPost: MockSignature;
-    mockPostOnce: MockSignature;
-    mockPut: MockSignature;
-    mockPutOnce: MockSignature;
-    mockRequest: (matcher: Matcher | RegExp | string, resOptions?: ResOptions, mockOptions?: MockOptions) => void;
-    mockRequestOnce: (matcher: Matcher | RegExp | string, resOptions?: ResOptions, mockOptions?: MockOptions) => void;
-  };
+  const mockedFetch = globalThis.fetch as MockFetch;
 
   mockedFetch.mockDelete = (
-    matcher: Omit<Matcher, 'method'> | RegExp | string,
-    resOptions?: ResOptions,
+    matcher: ImplicitMethodMatcher,
+    resOptions?: ResponseOptions | number,
     mockOptions?: MockOptions
   ) => {
-    const normalisedMatcher = { ...normaliseMatcher(matcher), method: 'delete' };
-    const zodSchema = jsonToZod(normalisedMatcher);
-    mockedFetch.mockImplementation(createMockImplementation(zodSchema, resOptions, mockOptions));
+    mockedFetch.mockImplementation(
+      createMockImplementation(
+        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'delete')),
+        { ...mockFetchOptions, globalFetch },
+        normaliseRequestOptions(resOptions),
+        mockOptions
+      )
+    );
+
+    return mockedFetch;
   };
 
   mockedFetch.mockDeleteOnce = (
-    matcher: Omit<Matcher, 'method'> | RegExp | string,
-    resOptions?: ResOptions,
+    matcher: ImplicitMethodMatcher,
+    resOptions?: ResponseOptions | number,
     mockOptions?: MockOptions
   ) => {
-    const normalisedMatcher = { ...normaliseMatcher(matcher), method: 'delete' };
-    const zodSchema = jsonToZod(normalisedMatcher);
-    mockedFetch.mockImplementationOnce(createMockImplementation(zodSchema, resOptions, mockOptions));
+    mockedFetch.mockImplementationOnce(
+      createMockImplementation(
+        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'delete')),
+        { ...mockFetchOptions, globalFetch },
+        normaliseRequestOptions(resOptions),
+        mockOptions
+      )
+    );
+
+    return mockedFetch;
   };
 
   mockedFetch.mockGet = (
-    matcher: Omit<Matcher, 'method'> | RegExp | string,
-    resOptions?: ResOptions,
+    matcher: ImplicitMethodMatcher,
+    resOptions?: ResponseOptions | number,
     mockOptions?: MockOptions
   ) => {
-    const normalisedMatcher = { ...normaliseMatcher(matcher), method: 'get' };
-    const zodSchema = jsonToZod(normalisedMatcher);
-    mockedFetch.mockImplementation(createMockImplementation(zodSchema, resOptions, mockOptions));
+    mockedFetch.mockImplementation(
+      createMockImplementation(
+        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'get')),
+        { ...mockFetchOptions, globalFetch },
+        normaliseRequestOptions(resOptions),
+        mockOptions
+      )
+    );
+
+    return mockedFetch;
   };
 
   mockedFetch.mockGetOnce = (
-    matcher: Omit<Matcher, 'method'> | RegExp | string,
-    resOptions?: ResOptions,
+    matcher: ImplicitMethodMatcher,
+    resOptions?: ResponseOptions | number,
     mockOptions?: MockOptions
   ) => {
-    const normalisedMatcher = { ...normaliseMatcher(matcher), method: 'get' };
-    const zodSchema = jsonToZod(normalisedMatcher);
-    mockedFetch.mockImplementationOnce(createMockImplementation(zodSchema, resOptions, mockOptions));
+    mockedFetch.mockImplementationOnce(
+      createMockImplementation(
+        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'get')),
+        { ...mockFetchOptions, globalFetch },
+        normaliseRequestOptions(resOptions),
+        mockOptions
+      )
+    );
+
+    return mockedFetch;
   };
 
   mockedFetch.mockPost = (
-    matcher: Omit<Matcher, 'method'> | RegExp | string,
-    resOptions?: ResOptions,
+    matcher: ImplicitMethodMatcher,
+    resOptions?: ResponseOptions | number,
     mockOptions?: MockOptions
   ) => {
-    const normalisedMatcher = { ...normaliseMatcher(matcher), method: 'post' };
-    const zodSchema = jsonToZod(normalisedMatcher);
-    mockedFetch.mockImplementation(createMockImplementation(zodSchema, resOptions, mockOptions));
+    mockedFetch.mockImplementation(
+      createMockImplementation(
+        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'post')),
+        { ...mockFetchOptions, globalFetch },
+        normaliseRequestOptions(resOptions),
+        mockOptions
+      )
+    );
+
+    return mockedFetch;
   };
 
   mockedFetch.mockPostOnce = (
-    matcher: Omit<Matcher, 'method'> | RegExp | string,
-    resOptions?: ResOptions,
+    matcher: ImplicitMethodMatcher,
+    resOptions?: ResponseOptions | number,
     mockOptions?: MockOptions
   ) => {
-    const normalisedMatcher = { ...normaliseMatcher(matcher), method: 'post' };
-    const zodSchema = jsonToZod(normalisedMatcher);
-    mockedFetch.mockImplementationOnce(createMockImplementation(zodSchema, resOptions, mockOptions));
+    mockedFetch.mockImplementationOnce(
+      createMockImplementation(
+        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'post')),
+        { ...mockFetchOptions, globalFetch },
+        normaliseRequestOptions(resOptions),
+        mockOptions
+      )
+    );
+
+    return mockedFetch;
   };
 
   mockedFetch.mockPut = (
-    matcher: Omit<Matcher, 'method'> | RegExp | string,
-    resOptions?: ResOptions,
+    matcher: ImplicitMethodMatcher,
+    resOptions?: ResponseOptions | number,
     mockOptions?: MockOptions
   ) => {
-    const normalisedMatcher = { ...normaliseMatcher(matcher), method: 'put' };
-    const zodSchema = jsonToZod(normalisedMatcher);
-    mockedFetch.mockImplementation(createMockImplementation(zodSchema, resOptions, mockOptions));
+    mockedFetch.mockImplementation(
+      createMockImplementation(
+        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'put')),
+        { ...mockFetchOptions, globalFetch },
+        normaliseRequestOptions(resOptions),
+        mockOptions
+      )
+    );
+
+    return mockedFetch;
   };
 
   mockedFetch.mockPutOnce = (
-    matcher: Omit<Matcher, 'method'> | RegExp | string,
-    resOptions?: ResOptions,
+    matcher: ImplicitMethodMatcher,
+    resOptions?: ResponseOptions | number,
     mockOptions?: MockOptions
   ) => {
-    const normalisedMatcher = { ...normaliseMatcher(matcher), method: 'put' };
-    const zodSchema = jsonToZod(normalisedMatcher);
-    mockedFetch.mockImplementationOnce(createMockImplementation(zodSchema, resOptions, mockOptions));
+    mockedFetch.mockImplementationOnce(
+      createMockImplementation(
+        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'put')),
+        { ...mockFetchOptions, globalFetch },
+        normaliseRequestOptions(resOptions),
+        mockOptions
+      )
+    );
+
+    return mockedFetch;
   };
 
-  mockedFetch.mockRequest = (
-    matcher: Matcher | RegExp | string,
-    resOptions?: ResOptions,
-    mockOptions?: MockOptions
-  ) => {
-    const zodSchema = jsonToZod(normaliseMatcher(matcher));
-    mockedFetch.mockImplementation(createMockImplementation(zodSchema, resOptions, mockOptions));
+  mockedFetch.mockRequest = (matcher: Matcher, resOptions?: ResponseOptions | number, mockOptions?: MockOptions) => {
+    mockedFetch.mockImplementation(
+      createMockImplementation(
+        transformMatcherObjToZod(normaliseMatcherObj(matcher)),
+        { ...mockFetchOptions, globalFetch },
+        normaliseRequestOptions(resOptions),
+        mockOptions
+      )
+    );
+
+    return mockedFetch;
   };
 
   mockedFetch.mockRequestOnce = (
-    matcher: Matcher | RegExp | string,
-    resOptions?: ResOptions,
+    matcher: Matcher,
+    resOptions?: ResponseOptions | number,
     mockOptions?: MockOptions
   ) => {
-    const zodSchema = jsonToZod(normaliseMatcher(matcher));
-    mockedFetch.mockImplementationOnce(createMockImplementation(zodSchema, resOptions, mockOptions));
+    mockedFetch.mockImplementationOnce(
+      createMockImplementation(
+        transformMatcherObjToZod(normaliseMatcherObj(matcher)),
+        { ...mockFetchOptions, globalFetch },
+        normaliseRequestOptions(resOptions),
+        mockOptions
+      )
+    );
+
+    return mockedFetch;
   };
 
   mockedFetch.mockRestore = () => {

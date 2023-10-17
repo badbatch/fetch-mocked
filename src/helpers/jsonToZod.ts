@@ -1,11 +1,11 @@
 import { isRegExp } from 'lodash-es';
 import type { JsonArray, JsonObject, ValueOf } from 'type-fest';
 import { type ZodTypeAny, z } from 'zod';
-import type { Matcher } from '../types.ts';
+import type { MatcherObj } from '../types.ts';
 
 const IS_REGEX = /^\/.+\/[dgimsuvy]*$/;
 
-const typeofToZodType = (value: ValueOf<Matcher>) => {
+const typeofToZodType = (value: ValueOf<MatcherObj>) => {
   switch (true) {
     case isRegExp(value): {
       const castValue = value as RegExp;
@@ -86,11 +86,11 @@ const typeofToZodType = (value: ValueOf<Matcher>) => {
   }
 };
 
-export const jsonToZod = (matcher: Matcher) =>
+export const jsonToZod = (matcher: MatcherObj) =>
   z.object(
     // eslint-disable-next-line unicorn/no-array-reduce
     Object.keys(matcher).reduce((acc: Record<string, ZodTypeAny>, key) => {
-      const zodType = typeofToZodType(matcher[key as keyof Matcher]);
+      const zodType = typeofToZodType(matcher[key as keyof MatcherObj]);
 
       if (zodType) {
         acc[key] = zodType;

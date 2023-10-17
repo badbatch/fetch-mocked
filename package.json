@@ -36,7 +36,8 @@
   "peerDependencies": {
     "@babel/runtime": "<8",
     "core-js": "<4",
-    "lodash-es": "<5"
+    "lodash-es": "<5",
+    "node-fetch": "<4"
   },
   "devDependencies": {
     "@babel/cli": "^7.21.5",

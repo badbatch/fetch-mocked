@@ -26,7 +26,9 @@
     "lint": "eslint . --ext .ts,.cjs",
     "repodog": "repodog",
     "syncpack": "syncpack",
-    "test": "node --require=suppress-experimental-warnings --experimental-vm-modules node_modules/jest/bin/jest.js --passWithNoTests",
+    "test": "pnpm run test:jest && pnpm run test:vitest",
+    "test:jest": "node --require=suppress-experimental-warnings --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:vitest": "node node_modules/vitest/vitest.mjs src/main.vitest.test.ts --run",
     "type-check": "tsc --noEmit",
     "validate": "syncpack format && syncpack lint-semver-ranges && pnpm run build && pnpm run lint && pnpm run type-check && pnpm run test"
   },

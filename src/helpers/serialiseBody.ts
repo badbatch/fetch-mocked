@@ -1,6 +1,6 @@
 import { isString } from 'lodash-es';
 import type { Jsonifiable } from 'type-fest';
-import { ResponseType } from '../types.ts';
+import { ResponseType } from '../enums.ts';
 import { appendFormData } from './appendFormData.ts';
 
 export const serialiseBody = (body: Jsonifiable, responseType: ResponseType) => {

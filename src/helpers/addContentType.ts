@@ -1,4 +1,4 @@
-import { ResponseType } from '../types.ts';
+import { ResponseType } from '../enums.ts';
 
 export const addContentType = (headers: Record<string, string>, responseType: ResponseType): Record<string, string> => {
   let contentType: string;

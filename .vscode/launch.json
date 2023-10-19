@@ -5,7 +5,7 @@
       "request": "launch",
       "name": "Jest - current file",
       "program": "${workspaceFolder}/node_modules/jest/bin/jest",
-      // "runtimeVersion": "18.13.0",
+      "runtimeVersion": "18.13.0",
       "args": [
         "${relativeFile}"
       ],
@@ -15,6 +15,19 @@
       },
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
-    }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Vitest - current file",
+      "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
+      "runtimeVersion": "18.13.0",
+      "args": [
+        "${relativeFile}",
+        "--run"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
   ]
 }

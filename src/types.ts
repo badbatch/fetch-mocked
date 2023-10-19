@@ -2,18 +2,10 @@ import { type FunctionLike, type MockedFunction as JestMockedFunction } from 'je
 import type { Jsonifiable } from 'type-fest';
 import { type MockedFunction as VitestMockedFunction } from 'vitest';
 import type { ZodObject, ZodTypeAny } from 'zod';
+import type { ResponseType } from './enums.ts';
 
 export type FallbackHanderOptions = {
-  finalResponseOptions: {
-    body: string | Blob | FormData | Uint8Array | undefined;
-    headers: Record<string, string>;
-    status: number;
-    statusText: string | undefined;
-  };
-  initialResponseOptions: ResponseOptions;
-  matcher: MatcherFunc | MatcherZod;
-  mockOptions: MockOptions;
-  normalisedRequest: ReturnType<typeof import('./helpers/normaliseRequest.ts')['normaliseRequest']>;
+  mockOptions: MockFetchOptions;
   requestInfo: RequestInfo | URL;
   requestInit: RequestInit | undefined;
 };
@@ -24,7 +16,7 @@ export type ImplicitMethodMatcher = Omit<MatcherObj, 'method'> | RegExp | string
 
 export type ImplicitMethodMockSignature = (
   matcher: ImplicitMethodMatcher,
-  resOptions?: ResponseOptions | number,
+  resOptions?: ResponseOptions,
   mockOptions?: MockOptions
 ) => MockFetch;
 
@@ -66,7 +58,6 @@ export type MockFetchOptions = {
    * useful for debugging why no matching mock is found.
    */
   fallbackHandler?: (options: FallbackHanderOptions) => void;
-
   /**
    * Whether to allow requests through to the network if
    * no matching mock is found. The default is false.
@@ -85,15 +76,34 @@ export type MockFetchOptions = {
   warnOnFallback?: boolean;
 };
 
-export type MockOptions = MockFetchOptions & {
-  delay?: number;
+export type MockImplementation = (
+  requestInfo: RequestInfo | URL,
+  requestInit?: RequestInit
+) => MockImplementationCheckpoint;
+
+export type MockImplementationCheckpoint = {
+  isMatch: boolean;
+  resolve: () => Promise<Response>;
 };
 
-export type MockSignature = (
-  matcher: Matcher,
-  resOptions?: ResponseOptions | number,
-  mockOptions?: MockOptions
-) => MockFetch;
+export type MockOptions = {
+  /**
+   * How long to delay the response in milliseconds.
+   */
+  delay?: number;
+  /**
+   * The type of the response body, can be 'arraybuffer', 'blob',
+   * 'formdata', 'json' or 'text. The default is 'json'.
+   */
+  responseType?: ResponseType;
+  /**
+   * The number of times to apply the mock to a matching request.
+   * The default is infinity.
+   */
+  times?: number;
+};
+
+export type MockSignature = (matcher: Matcher, resOptions?: ResponseOptions, mockOptions?: MockOptions) => MockFetch;
 
 export type NormalisedRequest = {
   body?: unknown;
@@ -102,12 +112,6 @@ export type NormalisedRequest = {
   url: string;
 };
 
-export type ResponseOptions = ResponseInit & { body?: Jsonifiable };
+export type ResponseOptionsObj = ResponseInit & { body?: Jsonifiable };
 
-export enum ResponseType {
-  ARRAY_BUFFER = 'arraybuffer',
-  BLOB = 'blob',
-  FORM_DATA = 'formdata',
-  JSON = 'json',
-  TEXT = 'text',
-}
+export type ResponseOptions = ResponseOptionsObj | number | string;

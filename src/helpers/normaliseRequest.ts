@@ -32,9 +32,14 @@ export const normaliseHeaders = (headers?: HeadersInit) => {
   return headers;
 };
 
+export const normaliseMethod = (requestInit?: RequestInit) => requestInit?.method ?? 'get';
+
+export const normaliseUrl = (requestInfo: RequestInfo | URL) =>
+  requestInfo instanceof URL ? requestInfo.href : requestInfo instanceof Request ? requestInfo.url : requestInfo;
+
 export const normaliseRequest = (requestInfo: RequestInfo | URL, requestInit?: RequestInit) => ({
   body: normaliseBody(requestInit?.body),
   headers: normaliseHeaders(requestInit?.headers),
-  method: requestInit?.method ?? 'get',
-  url: requestInfo instanceof URL ? requestInfo.href : requestInfo instanceof Request ? requestInfo.url : requestInfo,
+  method: normaliseMethod(requestInit),
+  url: normaliseUrl(requestInfo),
 });

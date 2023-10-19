@@ -1,5 +1,5 @@
-import { isNumber } from 'lodash-es';
-import type { ResponseOptions } from '../types.ts';
+import { isNumber, isString } from 'lodash-es';
+import type { ResponseOptions, ResponseOptionsObj } from '../types.ts';
 
-export const normaliseRequestOptions = (resOptions?: ResponseOptions | number) =>
-  isNumber(resOptions) ? { status: resOptions } : resOptions;
+export const normaliseRequestOptions = (resOptions?: ResponseOptions): ResponseOptionsObj | undefined =>
+  isNumber(resOptions) ? { status: resOptions } : isString(resOptions) ? { body: resOptions } : resOptions;

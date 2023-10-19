@@ -6,7 +6,7 @@ const isBodyValidArray = (body: Jsonifiable): body is [string, string][] =>
   body.every(entry => Array.isArray(entry) && entry.length === 2 && entry.every(subEntry => isString(subEntry)));
 
 const isBodyValidObj = (body: Jsonifiable): body is Record<string, string> =>
-  !!body && isPlainObject(body) && Object.entries(body).every(subEntry => isString(subEntry));
+  !!body && isPlainObject(body) && Object.entries(body).every(entry => entry.every(subEntry => isString(subEntry)));
 
 export const appendFormData = (formData: FormData, body: Jsonifiable) => {
   if (isBodyValidArray(body)) {

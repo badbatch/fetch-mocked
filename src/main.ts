@@ -41,17 +41,31 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
   } = mockFetchOptions ?? {};
 
   const mockImplementation = async (requestInfo: RequestInfo | URL, requestInit?: RequestInit) => {
-    const index = activeMocks.findIndex(([mockImp]) => mockImp(requestInfo, requestInit).isMatch);
+    let resolve: (() => Promise<Response>) | undefined;
 
-    if (index !== -1) {
-      const [mockImp, counter] = activeMocks[index]!;
+    const index = activeMocks.findIndex(([mockImp]) => {
+      const result = mockImp(requestInfo, requestInit);
+
+      if (result.isMatch) {
+        resolve = result.resolve;
+      }
+
+      return result.isMatch;
+    });
+
+    if (index !== -1 && resolve) {
+      const [, counter] = activeMocks[index]!;
       counter.total += 1;
 
       if (counter.total === counter.limit) {
         activeMocks.splice(index, 1);
       }
 
-      return mockImp(requestInfo, requestInit).resolve();
+      if (activeMocks.length === 0) {
+        mockedFetch.mockReset();
+      }
+
+      return resolve();
     }
 
     mockClearLastCall(mockedFetch);

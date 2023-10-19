@@ -15,7 +15,7 @@ export const addContentType = (headers: Record<string, string>, responseType: Re
     }
 
     case ResponseType.FORM_DATA: {
-      contentType = 'multipart/form-data';
+      contentType = 'application/x-www-form-urlencoded';
       break;
     }
 

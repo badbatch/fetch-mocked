@@ -61,10 +61,6 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
         activeMocks.splice(index, 1);
       }
 
-      if (activeMocks.length === 0) {
-        mockedFetch.mockReset();
-      }
-
       return resolve();
     }
 

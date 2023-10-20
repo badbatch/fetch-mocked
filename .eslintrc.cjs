@@ -4,6 +4,15 @@ module.exports = {
     {
       extends: ['@repodog/eslint-config-jest'],
       files: ['**/*.{spec,test}.*'],
+      rules: {
+        'jest/max-nested-describe': [
+          2,
+          {
+            max: 6,
+          },
+        ],
+        'jest/no-duplicate-hooks': 0,
+      },
     },
   ],
   parserOptions: {

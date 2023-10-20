@@ -702,14 +702,21 @@ describe('fetch-mocked', () => {
         });
 
         describe('when requests exceed the number of times mock can be used', () => {
-          let responses: (Response | undefined)[];
+          let responses: (Response | Error)[];
 
           beforeEach(async () => {
-            responses = await Promise.all([fetch('/alpha'), fetch('/alpha'), fetch('/alpha')]);
+            try {
+              const settled = await Promise.allSettled([fetch('/alpha'), fetch('/alpha'), fetch('/alpha')]);
+              responses = settled.map(entry => (entry.status === 'fulfilled' ? entry.value : (entry.reason as Error)));
+            } catch {
+              // no catch
+            }
           });
 
-          it('should mock the requests within the times window', () => {
-            expect(responses).toEqual(expect.arrayContaining([expect.any(Response), expect.any(Response), undefined]));
+          it('should mock the requests within times', () => {
+            expect(responses).toEqual(
+              expect.arrayContaining([expect.any(Response), expect.any(Response), expect.any(Error)])
+            );
           });
         });
       });
@@ -818,6 +825,353 @@ describe('fetch-mocked', () => {
 
       it('should add the mocks to the activeMocks array', () => {
         expect(activeMocks).toHaveLength(3);
+      });
+    });
+  });
+
+  describe('mockRequestOnce', () => {
+    beforeEach(() => {
+      mockedFetch.mockRequestOnce('/alpha', 'Hello world!').mockRequestOnce('/bravo', 'Goodbye world!');
+    });
+
+    describe('when a mocked request is made once', () => {
+      let responses: Response[];
+
+      beforeEach(async () => {
+        responses = await Promise.all([fetch('/alpha'), fetch('/bravo')]);
+      });
+
+      it('should mock the requests', () => {
+        expect(responses).toEqual(expect.arrayContaining([expect.any(Response), expect.any(Response)]));
+      });
+
+      it('should have removed the mocks to the activeMocks array', () => {
+        expect(activeMocks).toHaveLength(0);
+      });
+    });
+
+    describe('when a mocked request is made multiple times', () => {
+      let responses: (Response | Error)[];
+
+      beforeEach(async () => {
+        try {
+          const settled = await Promise.allSettled([
+            fetch('/alpha'),
+            fetch('/alpha'),
+            fetch('/bravo'),
+            fetch('/bravo'),
+          ]);
+
+          responses = settled.map(entry => (entry.status === 'fulfilled' ? entry.value : (entry.reason as Error)));
+        } catch {
+          // no catch
+        }
+      });
+
+      it('should mock the first request', () => {
+        expect(responses).toEqual(
+          expect.arrayContaining([expect.any(Response), expect.any(Error), expect.any(Response), expect.any(Error)])
+        );
+      });
+
+      it('should have removed the mocks to the activeMocks array', () => {
+        expect(activeMocks).toHaveLength(0);
+      });
+    });
+  });
+
+  describe('mockDelete', () => {
+    let responses: Response[];
+
+    beforeEach(async () => {
+      mockedFetch.mockDelete('/alpha', 200);
+
+      responses = await Promise.all([
+        fetch('/alpha', { method: 'delete' }),
+        fetch('/alpha', { method: 'delete' }),
+        fetch('/alpha', { method: 'delete' }),
+      ]);
+    });
+
+    it('should have called the mock the correct number of times', () => {
+      expect(mockedFetch).toHaveBeenCalledTimes(3);
+    });
+
+    it('should mock all requests correctly', async () => {
+      const result = await Promise.all(responses.map(res => res.status));
+      expect(result).toEqual([200, 200, 200]);
+    });
+
+    it('should add the mock to the activeMocks array', () => {
+      expect(activeMocks).toHaveLength(1);
+    });
+  });
+
+  describe('mockDeleteOnce', () => {
+    let responses: (Response | Error)[];
+
+    beforeEach(async () => {
+      mockedFetch.mockDeleteOnce('/alpha', 200);
+
+      try {
+        const settled = await Promise.allSettled([
+          fetch('/alpha', { method: 'delete' }),
+          fetch('/alpha', { method: 'delete' }),
+        ]);
+
+        responses = settled.map(entry => (entry.status === 'fulfilled' ? entry.value : (entry.reason as Error)));
+      } catch {
+        // no catch
+      }
+    });
+
+    it('should mock the first request', () => {
+      expect(responses).toEqual(expect.arrayContaining([expect.any(Response), expect.any(Error)]));
+    });
+
+    it('should have removed the mocks to the activeMocks array', () => {
+      expect(activeMocks).toHaveLength(0);
+    });
+  });
+
+  describe('mockGet', () => {
+    let responses: Response[];
+
+    beforeEach(async () => {
+      mockedFetch.mockGet('/alpha', 'Hello world!');
+      responses = await Promise.all([fetch('/alpha'), fetch('/alpha'), fetch('/alpha')]);
+    });
+
+    it('should have called the mock the correct number of times', () => {
+      expect(mockedFetch).toHaveBeenCalledTimes(3);
+    });
+
+    it('should mock all requests correctly', async () => {
+      const result = await Promise.all(responses.map(res => res.json()));
+      expect(result).toEqual(['Hello world!', 'Hello world!', 'Hello world!']);
+    });
+
+    it('should add the mock to the activeMocks array', () => {
+      expect(activeMocks).toHaveLength(1);
+    });
+  });
+
+  describe('mockGetOnce', () => {
+    let responses: (Response | Error)[];
+
+    beforeEach(async () => {
+      mockedFetch.mockGetOnce('/alpha', 'Hello world!');
+
+      try {
+        const settled = await Promise.allSettled([fetch('/alpha'), fetch('/alpha')]);
+        responses = settled.map(entry => (entry.status === 'fulfilled' ? entry.value : (entry.reason as Error)));
+      } catch {
+        // no catch
+      }
+    });
+
+    it('should mock the first request', () => {
+      expect(responses).toEqual(expect.arrayContaining([expect.any(Response), expect.any(Error)]));
+    });
+
+    it('should have removed the mocks to the activeMocks array', () => {
+      expect(activeMocks).toHaveLength(0);
+    });
+  });
+
+  describe('mockPost', () => {
+    let responses: Response[];
+
+    beforeEach(async () => {
+      mockedFetch.mockPost({ body: { bravo: 'charlie' }, url: '/alpha' }, 'Hello world!');
+
+      responses = await Promise.all([
+        fetch('/alpha', { body: JSON.stringify({ bravo: 'charlie' }), method: 'post' }),
+        fetch('/alpha', { body: JSON.stringify({ bravo: 'charlie' }), method: 'post' }),
+        fetch('/alpha', { body: JSON.stringify({ bravo: 'charlie' }), method: 'post' }),
+      ]);
+    });
+
+    it('should have called the mock the correct number of times', () => {
+      expect(mockedFetch).toHaveBeenCalledTimes(3);
+    });
+
+    it('should mock all requests correctly', async () => {
+      const result = await Promise.all(responses.map(res => res.json()));
+      expect(result).toEqual(['Hello world!', 'Hello world!', 'Hello world!']);
+    });
+
+    it('should add the mock to the activeMocks array', () => {
+      expect(activeMocks).toHaveLength(1);
+    });
+  });
+
+  describe('mockPostOnce', () => {
+    let responses: (Response | Error)[];
+
+    beforeEach(async () => {
+      mockedFetch.mockPostOnce({ body: { bravo: 'charlie' }, url: '/alpha' }, 'Hello world!');
+
+      try {
+        const settled = await Promise.allSettled([
+          fetch('/alpha', { body: JSON.stringify({ bravo: 'charlie' }), method: 'post' }),
+          fetch('/alpha', { body: JSON.stringify({ bravo: 'charlie' }), method: 'post' }),
+        ]);
+
+        responses = settled.map(entry => (entry.status === 'fulfilled' ? entry.value : (entry.reason as Error)));
+      } catch {
+        // no catch
+      }
+    });
+
+    it('should mock the first request', () => {
+      expect(responses).toEqual(expect.arrayContaining([expect.any(Response), expect.any(Error)]));
+    });
+
+    it('should have removed the mocks to the activeMocks array', () => {
+      expect(activeMocks).toHaveLength(0);
+    });
+  });
+
+  describe('mockPut', () => {
+    let responses: Response[];
+
+    beforeEach(async () => {
+      mockedFetch.mockPut({ body: { bravo: 'charlie' }, url: '/alpha' }, 'Hello world!');
+
+      responses = await Promise.all([
+        fetch('/alpha', { body: JSON.stringify({ bravo: 'charlie' }), method: 'put' }),
+        fetch('/alpha', { body: JSON.stringify({ bravo: 'charlie' }), method: 'put' }),
+        fetch('/alpha', { body: JSON.stringify({ bravo: 'charlie' }), method: 'put' }),
+      ]);
+    });
+
+    it('should have called the mock the correct number of times', () => {
+      expect(mockedFetch).toHaveBeenCalledTimes(3);
+    });
+
+    it('should mock all requests correctly', async () => {
+      const result = await Promise.all(responses.map(res => res.json()));
+      expect(result).toEqual(['Hello world!', 'Hello world!', 'Hello world!']);
+    });
+
+    it('should add the mock to the activeMocks array', () => {
+      expect(activeMocks).toHaveLength(1);
+    });
+  });
+
+  describe('mockPutOnce', () => {
+    let responses: (Response | Error)[];
+
+    beforeEach(async () => {
+      mockedFetch.mockPutOnce({ body: { bravo: 'charlie' }, url: '/alpha' }, 'Hello world!');
+
+      try {
+        const settled = await Promise.allSettled([
+          fetch('/alpha', { body: JSON.stringify({ bravo: 'charlie' }), method: 'put' }),
+          fetch('/alpha', { body: JSON.stringify({ bravo: 'charlie' }), method: 'put' }),
+        ]);
+
+        responses = settled.map(entry => (entry.status === 'fulfilled' ? entry.value : (entry.reason as Error)));
+      } catch {
+        // no catch
+      }
+    });
+
+    it('should mock the first request', () => {
+      expect(responses).toEqual(expect.arrayContaining([expect.any(Response), expect.any(Error)]));
+    });
+
+    it('should have removed the mocks to the activeMocks array', () => {
+      expect(activeMocks).toHaveLength(0);
+    });
+  });
+
+  describe('mock fetch options', () => {
+    const fallbackHandler = jest.fn();
+
+    describe('when fallbackHandler is passed in', () => {
+      beforeEach(() => {
+        mockedFetch = mockFetch(jest.fn, { fallbackHandler });
+        mockedFetch.mockRequest('/test', 'Hello world!');
+      });
+
+      afterEach(() => {
+        mockedFetch = mockFetch(jest.fn);
+      });
+
+      describe('when a match is found', () => {
+        beforeEach(async () => {
+          await fetch('/test');
+        });
+
+        it('should not execute the handler', () => {
+          expect(fallbackHandler).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('when a match is not found', () => {
+        beforeEach(async () => {
+          try {
+            await fetch('/no-match');
+          } catch {
+            // no catch
+          }
+        });
+
+        it('should execute the handler with the correct args', () => {
+          expect(fallbackHandler).toHaveBeenCalledWith({
+            mockOptions: {
+              fallbackToNetwork: false,
+              responseType: 'json',
+              warnOnFallback: false,
+            },
+            requestInfo: '/no-match',
+            requestInit: undefined,
+          });
+        });
+      });
+    });
+
+    describe('when fallbackToNetwork and warnOnFallback are passed in', () => {
+      let globalConsole: Console;
+
+      beforeEach(() => {
+        globalConsole = globalThis.console;
+        globalThis.console = { warn: jest.fn() } as unknown as Console;
+        mockedFetch = mockFetch(jest.fn, { fallbackToNetwork: true, warnOnFallback: true });
+        mockedFetch.mockRequest('/test', 'Hello world!');
+      });
+
+      afterEach(() => {
+        globalThis.console = globalConsole;
+        mockedFetch = mockFetch(jest.fn);
+      });
+
+      describe('when a match is found', () => {
+        beforeEach(async () => {
+          await fetch('/test');
+        });
+
+        it('should not warn on fallthrough', () => {
+          expect(console.warn).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('when a match is not found', () => {
+        beforeEach(async () => {
+          try {
+            await fetch('/no-match');
+          } catch {
+            // no catch
+          }
+        });
+
+        it('should warn on fallthrough', () => {
+          expect(console.warn).toHaveBeenCalledWith(
+            'fetch-mocked => the get request to /no-match was not covered by any of the matchers, falling back to network.'
+          );
+        });
       });
     });
   });

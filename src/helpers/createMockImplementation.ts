@@ -11,10 +11,10 @@ export const createMockImplementation = (
   resOptions?: ResponseOptionsObj,
   mockOptions?: MockOptions
 ) => {
-  const { body, headers = {}, status = 200, statusText } = resOptions ?? {};
+  const { body, headers, status = 200, statusText } = resOptions ?? {};
   const { delay, responseType = ResponseType.JSON } = mockOptions ?? {};
   const serialisedResponseBody = body ? serialiseBody(body, responseType) : undefined;
-  const responseHeadersWithDefaults = addContentType(normaliseHeaders(headers)!, responseType);
+  const responseHeadersWithDefaults = addContentType(normaliseHeaders(headers), responseType);
   const statusTextWithDefault = !statusText && status === 200 ? 'OK' : statusText;
 
   return (requestInfo: RequestInfo | URL, requestInit?: RequestInit) => {

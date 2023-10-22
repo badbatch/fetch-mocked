@@ -10,8 +10,6 @@ export type FallbackHanderOptions = {
   requestInit: RequestInit | undefined;
 };
 
-export type FetchMethod = 'get' | 'post' | 'put' | 'delete';
-
 export type ImplicitMethodMatcher = Omit<MatcherObj, 'method'> | RegExp | string | MatcherFunc;
 
 export type ImplicitMethodMockSignature = (

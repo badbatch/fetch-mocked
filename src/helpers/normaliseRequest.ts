@@ -15,7 +15,7 @@ export const normaliseBody = (body?: BodyInit | null) => {
 
 export const normaliseHeaders = (headers?: HeadersInit) => {
   if (!headers) {
-    return;
+    return {};
   }
 
   if (headers instanceof Headers || Array.isArray(headers)) {

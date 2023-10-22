@@ -19,7 +19,7 @@ The library is written as a native esmodule so is compatible with native esmodul
 * [Matcher](#matcher)
 * [Response options](#response-options)
 * [Mock options](#mock-options)
-* [Mock functions](#mock-functions)
+* [Mock utils](#mock-utils)
 
 ### Install package
 
@@ -100,7 +100,7 @@ Whether to allow requests through to the network if no matching mock is found. T
 
 #### responseType
 
-The type of the response body. The value you provide for the body needs to be JSON serialisable or tostringable, but based on the responseType that body gets transformed into either an 'arraybuffer', 'blob', 'formdata', 'json', or 'text'. The default is 'json'. This can be overridden on a per mock basis.
+The type of the response body. The value you provide for the body needs to be JSON serialisable or tostringable, but based on the responseType the body gets transformed into either an 'arraybuffer', 'blob', 'formdata', 'json', or 'text'. The default is 'json'. This can be overridden on a per mock basis.
 
 #### warnOnFallback
 
@@ -108,11 +108,11 @@ Whether to print a warning to the console when a request is allowed through to t
 
 ### Mock fetch requests
 
-Requests can be mocked using the generic `mockRequest` and `mockRequestOnce` methods added to the mock object. These functions take a matcher as the first argument, response options as the second, and mock options as the third. These are all detailed [here](#api).
+Requests can be mocked using the generic `mockRequest` and `mockRequestOnce` utils added to the mock object. These functions take a matcher as the first argument, response options as the second, and mock options as the third. These are all detailed [here](#api).
 
-While you can mock any http request method using the generic `mockRequest` and `mockRequestOnce` methods, `fetch-mocked` provides specific methods to mock `DELETE`, `GET`, `POST`, and `PUT` requests, which are detailed [here](#mock-functions).
+While you can mock any http request method using `mockRequest` and `mockRequestOnce`, `fetch-mocked` provides specific methods to mock `DELETE`, `GET`, `POST`, and `PUT` requests, which are detailed [here](#mock-utils).
 
-As you can see from the example below, you can use the built-in mock methods and `expect` assertions as with any mock object you create with your test framework.
+As you can see from the example below, you can use the built-in mock utils and `expect` assertions as with any mock object you create with your test framework.
 
 ```typescript
 describe('fetch-mocked', () => {
@@ -301,7 +301,7 @@ mockedFetch.mockRequest('*', 'Hello world!', { delay: 500 });
 
 #### responseType
 
-The type of the response body. The value you provide for the body needs to be JSON serialisable or tostringable, but based on the responseType that body gets transformed into either an 'arraybuffer', 'blob', 'formdata', 'json', or 'text'. The default is 'json'.
+The type of the response body. The value you provide for the body needs to be JSON serialisable or tostringable, but based on the responseType the body gets transformed into either an 'arraybuffer', 'blob', 'formdata', 'json', or 'text'. The default is 'json'.
 
 ```typescript
 mockedFetch.mockRequest('*', 'Hello world!', { responseType: 'text' });
@@ -315,13 +315,13 @@ The number of times to apply the mock to a matching request. The default is infi
 mockedFetch.mockRequest('*', 'Hello world!', { times: 3 });
 ```
 
-### Mock functions
+### Mock utils
 
 ```typescript
 (matcher: Matcher, resOptions?: ResponseOptions, mockOptions?: MockOptions) => MockFetch;
 ```
 
-`fetch-mocked` as single and multi mock functions for `DELETE`, `GET`, `POST`, and `PUT` requests. All mock functions have pretty much same signature. The only difference between the generic `mockRequest` functions and the fetch method specific functions is the method does not need to be passed in as an option.
+`fetch-mocked` as single and multi mock utils for `DELETE`, `GET`, `POST`, and `PUT` requests. All mock utils have pretty much same signature. The only difference between the `mockRequest` utils and the fetch method specific utils is the method does not need to be passed in as an option.
 
 ```typescript
 {

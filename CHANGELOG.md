@@ -1,3 +1,20 @@
+#### 0.0.4 (2023-10-22)
+
+##### Chores
+
+*  save work in progress (c43237fa)
+*  save work in progress (af965e27)
+
+##### Documentation Changes
+
+*  minor readme updates (38015b55)
+*  finish readme and minor code updates (fd221a18)
+
+##### New Features
+
+*  finish implementation and tests (8195d787)
+*  add additional functionality (385ba8e7)
+
 #### 0.0.3 (2023-10-16)
 
 ##### Chores

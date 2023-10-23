@@ -323,7 +323,7 @@ mockedFetch.mockRequest('*', 'Hello world!', { times: 3 });
 (matcher: Matcher, resOptions?: ResponseOptions, mockOptions?: MockOptions) => MockFetch;
 ```
 
-`fetch-mocked` as single and multi mock utils for `DELETE`, `GET`, `POST`, and `PUT` requests. All mock utils have pretty much same signature. The only difference between the `mockRequest` utils and the fetch method specific utils is the method does not need to be passed in as an option.
+`fetch-mocked` has single and multi mock utils for `DELETE`, `GET`, `POST`, and `PUT` requests. All mock utils have pretty much same signature. The only difference between the `mockRequest` utils and the fetch method specific utils is the method does not need to be passed in as an option.
 
 ```typescript
 {

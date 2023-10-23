@@ -1,19 +1,19 @@
-import { isRegExp } from 'lodash-es';
-import type { JsonArray, JsonObject, ValueOf } from 'type-fest';
+import { isBoolean, isFunction, isNumber, isPlainObject, isRegExp, isString } from 'lodash-es';
+import type { JsonArray, JsonObject, Jsonifiable } from 'type-fest';
 import { type ZodTypeAny, z } from 'zod';
-import type { MatcherObj } from '../types.ts';
+import type { MatcherObj, MatcherRecursiveObj, MatcherValueFunc } from '../types.ts';
 import { areArrayEntriesSameType } from './areArrayEntriesSameType.ts';
 
 const IS_REGEX = /^\/.+\/[dgimsuvy]*$/;
 
-const typeofToZodType = (value: ValueOf<MatcherObj>): ZodTypeAny => {
+const typeofToZodType = (value?: Jsonifiable | RegExp | MatcherValueFunc | MatcherRecursiveObj): ZodTypeAny => {
   switch (true) {
     case isRegExp(value): {
       const castValue = value as RegExp;
       return z.string().regex(castValue);
     }
 
-    case typeof value === 'string': {
+    case isString(value): {
       const castValue = value as string;
 
       if (castValue === '*') {
@@ -35,14 +35,19 @@ const typeofToZodType = (value: ValueOf<MatcherObj>): ZodTypeAny => {
       return z.literal(castValue);
     }
 
-    case typeof value === 'number': {
+    case isNumber(value): {
       const castValue = value as number;
       return z.literal(castValue);
     }
 
-    case typeof value === 'boolean': {
-      const castValue = value as unknown as boolean;
+    case isBoolean(value): {
+      const castValue = value as boolean;
       return z.literal(castValue);
+    }
+
+    case isFunction(value): {
+      const castValue = value as MatcherValueFunc;
+      return z.custom(castValue);
     }
 
     case Array.isArray(value): {
@@ -56,7 +61,7 @@ const typeofToZodType = (value: ValueOf<MatcherObj>): ZodTypeAny => {
       }
     }
 
-    case typeof value === 'object' && !Array.isArray(value): {
+    case isPlainObject(value): {
       const castValue = value as JsonObject;
 
       return z.object(
@@ -70,7 +75,7 @@ const typeofToZodType = (value: ValueOf<MatcherObj>): ZodTypeAny => {
     }
 
     default: {
-      return z.unknown();
+      return z.any();
     }
   }
 };

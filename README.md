@@ -211,14 +211,16 @@ mockedFetch.mockRequest((_url, { headers }) => !!headers.authorization, 'Hello w
 
 ```typescript
 {
-  body?: Jsonifiable;
-  headers?: Record<string, RegExp | string>;
+  body?: Jsonifiable | RegExp | (value: unknown) => boolean;
+  headers?: Record<string, RegExp | string | (value: unknown) => boolean>;
   method?: string;
-  url?: RegExp | string;
+  url?: RegExp | string | (value: unknown) => boolean;
 }
 ```
 
 It matches any request that's corresponding properties satisfy the values declared for the matcher body, headers, method and/or url. For the body and headers, `fetch-mocked` uses partial matching, meaning the request body and/or headers must have the properties in the matcher and satisfy their values, but can include other properties that will be ignored by the matcher.
+
+For any custom matching, you can pass in a function as the value for any matcher property and it will receive the corresponding value in the request and must return a boolean. If the function returns `true` then the value is a match, if it returns `false` it is not.
 
 ```typescript
 const matcher = {

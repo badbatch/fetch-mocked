@@ -23,11 +23,16 @@ export type Matcher = MatcherObj | RegExp | string | MatcherFunc;
 export type MatcherFunc = (requestInfo: RequestInfo | URL, requestInit?: RequestInit) => boolean;
 
 export type MatcherObj = {
-  body?: Jsonifiable;
-  headers?: Record<string, RegExp | string>;
+  body?: MatcherRecursiveObj;
+  headers?: Record<string, RegExp | string | MatcherValueFunc>;
   method?: string;
-  url?: RegExp | string;
+  url?: RegExp | string | MatcherValueFunc;
 };
+
+export type MatcherRecursiveObj = { [key: string]: Jsonifiable | RegExp | MatcherValueFunc | MatcherRecursiveObj };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type MatcherValueFunc = (value: any) => boolean;
 
 export type MatcherZod = ZodObject<Record<string, ZodTypeAny>>;
 

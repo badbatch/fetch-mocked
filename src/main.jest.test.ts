@@ -473,7 +473,7 @@ describe('fetch-mocked', () => {
             mockedFetch.mockRequest(
               {
                 body: {
-                  payload: { basket: { id: '12345' } },
+                  payload: { basket: { id: '12345', items: (value: string[]) => value.includes('98765') } },
                 },
               },
               'Hello world!'
@@ -486,7 +486,7 @@ describe('fetch-mocked', () => {
             beforeEach(async () => {
               res = await fetch('/test', {
                 body: JSON.stringify({
-                  payload: { basket: { id: '12345' } },
+                  payload: { basket: { id: '12345', items: ['54321', '98765'] } },
                 }),
               });
             });
@@ -506,7 +506,7 @@ describe('fetch-mocked', () => {
             beforeEach(() => {
               promise = fetch('/test', {
                 body: JSON.stringify({
-                  payload: { basket: { id: '54321' } },
+                  payload: { basket: { id: '12345', items: ['54321'] } },
                 }),
               });
             });

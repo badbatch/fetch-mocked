@@ -1,3 +1,9 @@
+#### 0.0.5 (2023-10-23)
+
+##### New Features
+
+*  add custom property matcher (030c743e)
+
 #### 0.0.4 (2023-10-22)
 
 ##### Chores

@@ -47,6 +47,16 @@ export default defineConfig({
 });
 ```
 
+#### Polyfill in test file
+
+If you don't want to or can't use the setup file, you can import the `polyfillFetch` function and execute that at the top of your test file. It will have the same effect as using the setup file.
+
+```javascript
+import { polyfillFetch } from 'fetch-mocked';
+
+polyfillFetch();
+```
+
 ### Mock fetch in test
 
 To mock out fetch, just import the `mockFetch` function and pass in the mock function of your test framework of choice as the first argument. The return value is an enriched version of the mock function.

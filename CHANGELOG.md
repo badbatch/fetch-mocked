@@ -1,3 +1,9 @@
+#### 0.0.7 (2023-11-04)
+
+##### Bug Fixes
+
+*  remove deps on test libs in type file (79997426)
+
 #### 0.0.6 (2023-11-04)
 
 ##### Documentation Changes

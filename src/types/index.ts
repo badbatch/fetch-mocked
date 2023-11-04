@@ -116,4 +116,5 @@ export type ResponseOptionsObj = ResponseInit & { body?: Jsonifiable };
 
 export type ResponseOptions = ResponseOptionsObj | number | string;
 
-export { type Jsonifiable } from 'type-fest';
+// eslint-disable-next-line unicorn/prefer-export-from
+export { type Jsonifiable };

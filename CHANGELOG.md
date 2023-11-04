@@ -1,3 +1,13 @@
+#### 0.0.6 (2023-11-04)
+
+##### Documentation Changes
+
+*  update README.md (46e4aaac)
+
+##### New Features
+
+*  add polyfill function (c1f16649)
+
 #### 0.0.5 (2023-10-23)
 
 ##### New Features

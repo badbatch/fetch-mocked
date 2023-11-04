@@ -1,4 +1,4 @@
-import type { MockFetch } from '../types.ts';
+import type { MockFetch } from '../types/index.ts';
 
 export const mockClearLastCall = (mockedFetch: MockFetch) => {
   mockedFetch.mock.calls.pop();

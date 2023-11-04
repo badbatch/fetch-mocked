@@ -1,5 +1,5 @@
 import type { ZodObject, ZodRawShape } from 'zod';
-import type { NormalisedRequest } from '../types.ts';
+import type { NormalisedRequest } from '../types/index.ts';
 
 export const isSchemaValid = (zodSchema: ZodObject<ZodRawShape>, request: NormalisedRequest) => {
   try {

@@ -17,7 +17,7 @@ import {
   type MockImplementation,
   type MockOptions,
   type ResponseOptions,
-} from './types.ts';
+} from './types/index.ts';
 
 const globalFetch = globalThis.fetch;
 export let activeMocks: [MockImplementation, { limit: number; total: number }][] = [];

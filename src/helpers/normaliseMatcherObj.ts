@@ -1,5 +1,5 @@
 import { isFunction } from 'lodash-es';
-import type { Matcher } from '../types.ts';
+import type { Matcher } from '../types/index.ts';
 import { isMatcherObj } from './isMatcherObj.ts';
 
 export const normaliseMatcherObj = (matcher: Matcher) => {

@@ -1,6 +1,6 @@
 import { isFunction } from 'lodash-es';
 import { ResponseType } from '../enums.ts';
-import { type MatcherFunc, type MatcherZod, type MockOptions, type ResponseOptionsObj } from '../types.ts';
+import { type MatcherFunc, type MatcherZod, type MockOptions, type ResponseOptionsObj } from '../types/index.ts';
 import { addContentType } from './addContentType.ts';
 import { isSchemaValid } from './isSchemaValid.ts';
 import { normaliseHeaders, normaliseRequest } from './normaliseRequest.ts';

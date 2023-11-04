@@ -1,7 +1,7 @@
 import { isBoolean, isFunction, isNumber, isPlainObject, isRegExp, isString } from 'lodash-es';
 import type { JsonArray, JsonObject, Jsonifiable } from 'type-fest';
 import { type ZodTypeAny, z } from 'zod';
-import type { MatcherObj, MatcherRecursiveObj, MatcherValueFunc } from '../types.ts';
+import type { MatcherObj, MatcherRecursiveObj, MatcherValueFunc } from '../types/index.ts';
 import { areArrayEntriesSameType } from './areArrayEntriesSameType.ts';
 
 const IS_REGEX = /^\/.+\/[dgimsuvy]*$/;

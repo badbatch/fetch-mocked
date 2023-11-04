@@ -1,8 +1,7 @@
-import { type FunctionLike, type MockedFunction as JestMockedFunction } from 'jest-mock';
 import type { Jsonifiable } from 'type-fest';
-import { type MockedFunction as VitestMockedFunction } from 'vitest';
 import type { ZodObject, ZodTypeAny } from 'zod';
-import type { ResponseType } from './enums.ts';
+import type { ResponseType } from '../enums.ts';
+import type { FunctionLike, MockedFunction } from './mock.ts';
 
 export type FallbackHanderOptions = {
   mockOptions: MockFetchOptions;
@@ -36,11 +35,9 @@ export type MatcherValueFunc = (value: any) => boolean;
 
 export type MatcherZod = ZodObject<Record<string, ZodTypeAny>>;
 
-export type MockFunc = VitestMockedFunction<FunctionLike> | JestMockedFunction<FunctionLike>;
+export type MockFunc = MockedFunction<FunctionLike>;
 
-export type MockFetchBare =
-  | VitestMockedFunction<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>
-  | JestMockedFunction<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>;
+export type MockFetchBare = MockedFunction<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>;
 
 export type MockFetch = MockFetchBare & {
   mockDelete: ImplicitMethodMockSignature;

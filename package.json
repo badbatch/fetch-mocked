@@ -33,6 +33,7 @@
     "validate": "syncpack format && syncpack lint-semver-ranges && pnpm run build && pnpm run lint && pnpm run type-check && pnpm run test"
   },
   "dependencies": {
+    "type-fest": "^4.4.0",
     "zod": "^3.22.4"
   },
   "peerDependencies": {
@@ -112,7 +113,6 @@
     "rollup-plugin-sourcemaps": "^0.6.3",
     "suppress-experimental-warnings": "^1.1.17",
     "syncpack": "^9.8.6",
-    "type-fest": "^4.4.0",
     "typescript": "^5.0.3",
     "vitest": "^0.34.6"
   },

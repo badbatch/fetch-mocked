@@ -1,3 +1,10 @@
+#### 0.0.9 (2023-11-04)
+
+##### Bug Fixes
+
+*  way type fest type is re exported (19a57cdd)
+*  export jsonifiable and add type fest to deps (d11f5855)
+
 #### 0.0.8 (2023-11-04)
 
 ##### Bug Fixes

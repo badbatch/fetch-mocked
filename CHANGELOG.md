@@ -1,3 +1,9 @@
+#### 0.0.8 (2023-11-04)
+
+##### Bug Fixes
+
+*  tolowercase method name before match (981c4cd2)
+
 #### 0.0.7 (2023-11-04)
 
 ##### Bug Fixes

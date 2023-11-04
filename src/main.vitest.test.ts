@@ -429,18 +429,36 @@ describe('fetch-mocked', () => {
           });
 
           describe('when there is a match', () => {
-            let res: Response;
+            describe('when the method name is uppercase', () => {
+              let res: Response;
 
-            beforeEach(async () => {
-              res = await fetch('/test', { method: 'post' });
+              beforeEach(async () => {
+                res = await fetch('/test', { method: 'POST' });
+              });
+
+              it('should have called the mock', () => {
+                expect(mockedFetch).toHaveBeenCalledTimes(1);
+              });
+
+              it('should return a response', () => {
+                expect(res).toBeInstanceOf(Response);
+              });
             });
 
-            it('should have called the mock', () => {
-              expect(mockedFetch).toHaveBeenCalledTimes(1);
-            });
+            describe('when the method name is lowercase', () => {
+              let res: Response;
 
-            it('should return a response', () => {
-              expect(res).toBeInstanceOf(Response);
+              beforeEach(async () => {
+                res = await fetch('/test', { method: 'post' });
+              });
+
+              it('should have called the mock', () => {
+                expect(mockedFetch).toHaveBeenCalledTimes(1);
+              });
+
+              it('should return a response', () => {
+                expect(res).toBeInstanceOf(Response);
+              });
             });
           });
 

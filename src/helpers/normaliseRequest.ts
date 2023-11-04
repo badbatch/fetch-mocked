@@ -32,7 +32,7 @@ export const normaliseHeaders = (headers?: HeadersInit) => {
   return headers;
 };
 
-export const normaliseMethod = (requestInit?: RequestInit) => requestInit?.method ?? 'get';
+export const normaliseMethod = (requestInit?: RequestInit) => requestInit?.method?.toLowerCase() ?? 'get';
 
 export const normaliseUrl = (requestInfo: RequestInfo | URL) =>
   requestInfo instanceof URL ? requestInfo.href : requestInfo instanceof Request ? requestInfo.url : requestInfo;

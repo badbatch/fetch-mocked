@@ -8,7 +8,7 @@ module.exports = {
         'jest/max-nested-describe': [
           2,
           {
-            max: 6,
+            max: 7,
           },
         ],
         'jest/no-duplicate-hooks': 0,

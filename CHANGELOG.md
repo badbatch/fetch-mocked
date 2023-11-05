@@ -1,3 +1,9 @@
+#### 0.0.10 (2023-11-05)
+
+##### New Features
+
+*  add content length (8edb5c54)
+
 #### 0.0.9 (2023-11-04)
 
 ##### Bug Fixes

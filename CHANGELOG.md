@@ -1,3 +1,9 @@
+#### 0.0.11 (2023-11-05)
+
+##### Bug Fixes
+
+*  export responsetype enum (2c310f69)
+
 #### 0.0.10 (2023-11-05)
 
 ##### New Features

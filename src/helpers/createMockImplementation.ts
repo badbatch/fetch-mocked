@@ -1,7 +1,7 @@
 import { isFunction } from 'lodash-es';
 import { ResponseType } from '../enums.ts';
 import { type MatcherFunc, type MatcherZod, type MockOptions, type ResponseOptionsObj } from '../types/index.ts';
-import { addContentType } from './addContentType.ts';
+import { addResponseHeaders } from './addResponseHeaders.ts';
 import { isSchemaValid } from './isSchemaValid.ts';
 import { normaliseHeaders, normaliseRequest } from './normaliseRequest.ts';
 import { serialiseBody } from './serialiseBody.ts';
@@ -14,7 +14,7 @@ export const createMockImplementation = (
   const { body, headers, status = 200, statusText } = resOptions ?? {};
   const { delay, responseType = ResponseType.JSON } = mockOptions ?? {};
   const serialisedResponseBody = body ? serialiseBody(body, responseType) : undefined;
-  const responseHeadersWithDefaults = addContentType(normaliseHeaders(headers), responseType);
+  const responseHeadersWithDefaults = addResponseHeaders(body, normaliseHeaders(headers), responseType);
   const statusTextWithDefault = !statusText && status === 200 ? 'OK' : statusText;
 
   return (requestInfo: RequestInfo | URL, requestInit?: RequestInit) => {

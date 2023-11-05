@@ -607,7 +607,10 @@ describe('fetch-mocked', () => {
         });
 
         it('should return the correct headers in the response', () => {
-          expect([...res.headers]).toEqual([['content-type', 'application/json']]);
+          expect([...res.headers]).toEqual([
+            ['content-length', '14'],
+            ['content-type', 'application/json'],
+          ]);
         });
 
         it('should have the correct status in the response', () => {
@@ -664,6 +667,7 @@ describe('fetch-mocked', () => {
 
         it('should return the correct headers in the response', () => {
           expect([...res.headers]).toEqual([
+            ['content-length', '7'],
             ['content-type', 'application/json'],
             ['x-test', 'alpha'],
           ]);

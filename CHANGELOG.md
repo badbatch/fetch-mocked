@@ -1,3 +1,9 @@
+#### 0.0.12 (2023-11-06)
+
+##### Bug Fixes
+
+*  to lower case headers as part of normalisation (a4d44b2f)
+
 #### 0.0.11 (2023-11-05)
 
 ##### Bug Fixes

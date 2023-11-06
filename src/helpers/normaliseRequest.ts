@@ -29,7 +29,9 @@ export const normaliseHeaders = (headers?: HeadersInit) => {
     return normalisedHeaders;
   }
 
-  return headers;
+  return Object.keys(headers).reduce<Record<string, string>>((acc, headerName) => {
+    return { ...acc, [headerName.toLowerCase()]: headers[headerName]! };
+  }, {});
 };
 
 export const normaliseMethod = (requestInit?: RequestInit) => requestInit?.method?.toLowerCase() ?? 'get';

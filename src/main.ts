@@ -24,7 +24,7 @@ export let activeMocks: [MockImplementation, { limit: number; total: number }][]
 
 export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetchOptions) => {
   const mockedFetch = (globalThis.fetch = new Proxy(mockFunc() as MockFetch, {
-    get(obj, prop: keyof MockFetch) {
+    get: (obj, prop: keyof MockFetch) => {
       if (prop === 'mockReset') {
         activeMocks = [];
       }

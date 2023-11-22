@@ -1,3 +1,9 @@
+#### 0.0.13 (2023-11-22)
+
+##### New Features
+
+*  move to exports map and provide cjs output (1e67e61c)
+
 #### 0.0.12 (2023-11-06)
 
 ##### Bug Fixes

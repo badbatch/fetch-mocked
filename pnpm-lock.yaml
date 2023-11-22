@@ -5,7 +5,6 @@ specifiers:
   '@babel/core': ^7.21.8
   '@babel/eslint-parser': ^7.21.8
   '@babel/plugin-proposal-decorators': ^7.23.2
-  '@babel/plugin-syntax-dynamic-import': ^7.8.3
   '@babel/plugin-syntax-import-assertions': ^7.20.0
   '@babel/plugin-transform-class-properties': ^7.22.5
   '@babel/plugin-transform-export-namespace-from': ^7.22.11
@@ -90,7 +89,6 @@ devDependencies:
   '@babel/core': 7.23.2
   '@babel/eslint-parser': 7.22.15_uqi5bwd6f66b6eofthaw4yjz5m
   '@babel/plugin-proposal-decorators': 7.23.2_@babel+core@7.23.2
-  '@babel/plugin-syntax-dynamic-import': 7.8.3_@babel+core@7.23.2
   '@babel/plugin-syntax-import-assertions': 7.22.5_@babel+core@7.23.2
   '@babel/plugin-transform-class-properties': 7.22.5_@babel+core@7.23.2
   '@babel/plugin-transform-export-namespace-from': 7.22.11_@babel+core@7.23.2

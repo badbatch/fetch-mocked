@@ -1,3 +1,9 @@
+#### 0.0.16 (2023-11-23)
+
+##### Bug Fixes
+
+*  update readme for testSetup use (995e1c38)
+
 #### 0.0.15 (2023-11-23)
 
 ##### Bug Fixes

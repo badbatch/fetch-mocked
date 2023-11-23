@@ -1,3 +1,10 @@
+#### 0.0.15 (2023-11-23)
+
+##### Bug Fixes
+
+*  add testSetup to export map (1e6704ca)
+*  remove redundant deps (c0f7ed0a)
+
 #### 0.0.14 (2023-11-22)
 
 ##### New Features

@@ -35,7 +35,7 @@
     "test:jest": "node --require=suppress-experimental-warnings --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:vitest": "node node_modules/vitest/vitest.mjs src/main.vitest.test.ts --run",
     "type-check": "tsc --noEmit",
-    "validate": "npm run syncpack && pnpm run build && pnpm run lint && pnpm run type-check && pnpm run test"
+    "validate": "pnpm run syncpack && pnpm run build && pnpm run lint && pnpm run type-check && pnpm run test"
   },
   "dependencies": {
     "type-fest": "^4.4.0",

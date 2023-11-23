@@ -378,7 +378,10 @@ describe('fetch-mocked', () => {
 
         describe('when the match is based on the headers field', () => {
           beforeEach(() => {
-            mockedFetch.mockRequest({ headers: { 'x-custom-header': 'alpha' } }, 'Hello world!');
+            mockedFetch.mockRequest(
+              { headers: { 'X-ANOTHER-CUSTOM-HEADER': 'bravo', 'x-custom-header': 'alpha' } },
+              'Hello world!'
+            );
           });
 
           describe('when there is a match', () => {
@@ -386,7 +389,7 @@ describe('fetch-mocked', () => {
 
             beforeEach(async () => {
               res = await fetch('/test', {
-                headers: { 'x-custom-header': 'alpha' },
+                headers: { 'x-another-custom-header': 'bravo', 'x-custom-header': 'alpha' },
               });
             });
 
@@ -404,7 +407,7 @@ describe('fetch-mocked', () => {
 
             beforeEach(() => {
               promise = fetch('/test', {
-                headers: { 'x-custom-header': 'bravo' },
+                headers: { 'x-custom-header': 'alpha' },
               });
             });
 
@@ -425,15 +428,12 @@ describe('fetch-mocked', () => {
         });
 
         describe('when the match is based on the method field', () => {
-          beforeEach(() => {
-            mockedFetch.mockRequest({ method: 'post' }, 'Hello world!');
-          });
-
           describe('when there is a match', () => {
-            describe('when the method name is uppercase', () => {
+            describe('when the method name is lowercase/uppercase', () => {
               let res: Response;
 
               beforeEach(async () => {
+                mockedFetch.mockRequest({ method: 'post' }, 'Hello world!');
                 res = await fetch('/test', { method: 'POST' });
               });
 
@@ -446,10 +446,11 @@ describe('fetch-mocked', () => {
               });
             });
 
-            describe('when the method name is lowercase', () => {
+            describe('when the method name is uppercase/lowercase', () => {
               let res: Response;
 
               beforeEach(async () => {
+                mockedFetch.mockRequest({ method: 'POST' }, 'Hello world!');
                 res = await fetch('/test', { method: 'post' });
               });
 
@@ -467,6 +468,7 @@ describe('fetch-mocked', () => {
             let promise: Promise<Response>;
 
             beforeEach(() => {
+              mockedFetch.mockRequest({ method: 'post' }, 'Hello world!');
               promise = fetch('/test', { method: 'delete' });
             });
 

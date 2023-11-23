@@ -1,3 +1,9 @@
+#### 0.0.17 (2023-11-23)
+
+##### Bug Fixes
+
+*  normalise headers and method for matcher (7beb86e7)
+
 #### 0.0.16 (2023-11-23)
 
 ##### Bug Fixes

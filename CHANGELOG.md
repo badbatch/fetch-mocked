@@ -1,3 +1,11 @@
+#### 0.0.18 (2023-12-16)
+
+##### Bug Fixes
+
+*  bump pnpm version in pipeline (5832d14e)
+*  dual package support (61edda25)
+*  typo in package json (a94a37f0)
+
 #### 0.0.17 (2023-11-23)
 
 ##### Bug Fixes

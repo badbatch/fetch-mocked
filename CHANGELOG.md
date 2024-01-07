@@ -1,3 +1,9 @@
+#### 0.0.19 (2024-01-07)
+
+##### Bug Fixes
+
+*  make sub path export keys relative (7671d5b4)
+
 #### 0.0.18 (2023-12-16)
 
 ##### Bug Fixes

@@ -34,7 +34,7 @@ The library provides a setup file to polyfill `fetch` and the `Request`, `Respon
 ```javascript
 // jest.config.js
 module.exports = {
-  setupFilesAfterEnv: ['fetch-mocked/testSetup'],
+  setupFilesAfterEnv: ['./node_modules/fetch-mocked/testSetup.mjs'],
 };
 ```
 
@@ -42,7 +42,7 @@ module.exports = {
 // vitest.config.js
 export default defineConfig({
   test: {
-    setupFiles: ['fetch-mocked/testSetup'],
+    setupFiles: ['./node_modules/fetch-mocked/testSetup.mjs'],
   },
 });
 ```

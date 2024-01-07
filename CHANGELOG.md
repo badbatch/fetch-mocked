@@ -1,3 +1,9 @@
+#### 0.0.20 (2024-01-07)
+
+##### Bug Fixes
+
+*  update readme for setup file examples (8441d8fb)
+
 #### 0.0.19 (2024-01-07)
 
 ##### Bug Fixes

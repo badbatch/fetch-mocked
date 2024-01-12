@@ -1,3 +1,10 @@
+#### 0.0.21 (2024-01-12)
+
+##### Chores
+
+*  remove deps (fa19ba72)
+*  upgrade deps (8800aca8)
+
 #### 0.0.20 (2024-01-07)
 
 ##### Bug Fixes

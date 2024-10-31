@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.0.22 (2024-10-31)
+
+### Bug Fixes
+
+* lock file (6e2e73c8)
+* address vulnerabilities (fdeef57b)
+* add correct husky commit message file (e584d462)
+
+### Refactors
+
+* upgrade to latest repodog config (ff764eac)
+
 ## 0.0.21 (2024-01-12)
 
 ### Chores

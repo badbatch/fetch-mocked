@@ -1,9 +1,11 @@
 import { isFunction } from 'lodash-es';
-import type { Matcher, MatcherObj } from '../types/index.ts';
+import { type Matcher, type MatcherObj } from '../types/index.ts';
 import { isMatcherObj } from './isMatcherObj.ts';
 
 export const normaliseHeaders = (headers: Exclude<MatcherObj['headers'], undefined>) => {
   return Object.keys(headers).reduce<Exclude<MatcherObj['headers'], undefined>>((acc, headerName) => {
+    // typescript not inferring headers[headerName] cannot be undefined.
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return { ...acc, [headerName.toLowerCase()]: headers[headerName]! };
   }, {});
 };

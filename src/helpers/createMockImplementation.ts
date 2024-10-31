@@ -9,7 +9,7 @@ import { serialiseBody } from './serialiseBody.ts';
 export const createMockImplementation = (
   matcher: MatcherFunc | MatcherZod,
   resOptions?: ResponseOptionsObj,
-  mockOptions?: MockOptions
+  mockOptions?: MockOptions,
 ) => {
   const { body, headers, status = 200, statusText } = resOptions ?? {};
   const { delay, responseType = ResponseType.JSON } = mockOptions ?? {};
@@ -34,7 +34,7 @@ export const createMockImplementation = (
           return new Promise<Response>(resolve =>
             setTimeout(() => {
               resolve(response);
-            }, delay)
+            }, delay),
           );
         }
 

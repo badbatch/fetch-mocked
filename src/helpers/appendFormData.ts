@@ -1,4 +1,6 @@
 import { isPlainObject, isString } from 'lodash-es';
+// vitest cannot handle inline type specifiers from type-only packages.
+// eslint-disable-next-line import-x/consistent-type-specifier-style
 import type { Jsonifiable } from 'type-fest';
 
 const isBodyValidArray = (body: Jsonifiable): body is [string, string][] =>

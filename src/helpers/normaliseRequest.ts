@@ -1,4 +1,6 @@
 import { isString } from 'lodash-es';
+// vitest cannot handle inline type specifiers from type-only packages.
+// eslint-disable-next-line import-x/consistent-type-specifier-style
 import type { Jsonifiable } from 'type-fest';
 
 export const normaliseBody = (body?: BodyInit | null) => {
@@ -7,6 +9,8 @@ export const normaliseBody = (body?: BodyInit | null) => {
   }
 
   try {
+    // JSON.parse returns an any type.
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     return JSON.parse(body) as Jsonifiable;
   } catch {
     return body;
@@ -30,6 +34,8 @@ export const normaliseHeaders = (headers?: HeadersInit) => {
   }
 
   return Object.keys(headers).reduce<Record<string, string>>((acc, headerName) => {
+    // typescript not inferring headers[headerName] cannot be undefined.
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return { ...acc, [headerName.toLowerCase()]: headers[headerName]! };
   }, {});
 };

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import productData from './__testUtils__/data/136-7317.json';
 import { ResponseType } from './enums.ts';
@@ -15,6 +14,7 @@ describe('fetch-mocked', () => {
     it('should return a mocked fetch with the correct custom methods', () => {
       expect(mockedFetch).toEqual(
         expect.objectContaining({
+          /* eslint-disable @typescript-eslint/no-unsafe-assignment */
           mock: expect.any(Object),
           mockDelete: expect.any(Function),
           mockDeleteOnce: expect.any(Function),
@@ -26,7 +26,8 @@ describe('fetch-mocked', () => {
           mockPutOnce: expect.any(Function),
           mockRequest: expect.any(Function),
           mockRequestOnce: expect.any(Function),
-        })
+          /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+        }),
       );
     });
 
@@ -379,7 +380,7 @@ describe('fetch-mocked', () => {
           beforeEach(() => {
             mockedFetch.mockRequest(
               { headers: { 'X-ANOTHER-CUSTOM-HEADER': 'bravo', 'x-custom-header': 'alpha' } },
-              'Hello world!'
+              'Hello world!',
             );
           });
 
@@ -495,7 +496,7 @@ describe('fetch-mocked', () => {
                   payload: { basket: { id: '12345', items: (value: string[]) => value.includes('98765') } },
                 },
               },
-              'Hello world!'
+              'Hello world!',
             );
           });
 
@@ -507,6 +508,7 @@ describe('fetch-mocked', () => {
                 body: JSON.stringify({
                   payload: { basket: { id: '12345', items: ['54321', '98765'] } },
                 }),
+                method: 'POST',
               });
             });
 
@@ -527,6 +529,7 @@ describe('fetch-mocked', () => {
                 body: JSON.stringify({
                   payload: { basket: { id: '12345', items: ['54321'] } },
                 }),
+                method: 'POST',
               });
             });
 
@@ -573,7 +576,7 @@ describe('fetch-mocked', () => {
                 method: 'post',
                 url: '*',
               },
-              'Hello world!'
+              'Hello world!',
             );
 
             res = await fetch('/test', {
@@ -738,7 +741,7 @@ describe('fetch-mocked', () => {
 
           it('should mock the requests within times', () => {
             expect(responses).toEqual(
-              expect.arrayContaining([expect.any(Response), expect.any(Response), expect.any(Error)])
+              expect.arrayContaining([expect.any(Response), expect.any(Response), expect.any(Error)]),
             );
           });
         });
@@ -893,7 +896,7 @@ describe('fetch-mocked', () => {
 
       it('should mock the first request', () => {
         expect(responses).toEqual(
-          expect.arrayContaining([expect.any(Response), expect.any(Error), expect.any(Response), expect.any(Error)])
+          expect.arrayContaining([expect.any(Response), expect.any(Error), expect.any(Response), expect.any(Error)]),
         );
       });
 
@@ -1192,7 +1195,7 @@ describe('fetch-mocked', () => {
 
         it('should warn on fallthrough', () => {
           expect(console.warn).toHaveBeenCalledWith(
-            'fetch-mocked => the get request to /no-match was not covered by any of the matchers, falling back to network.'
+            'fetch-mocked => the get request to /no-match was not covered by any of the matchers, falling back to network.',
           );
         });
       });

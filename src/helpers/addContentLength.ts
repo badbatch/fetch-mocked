@@ -1,3 +1,5 @@
+// vitest cannot handle inline type specifiers from type-only packages.
+// eslint-disable-next-line import-x/consistent-type-specifier-style
 import type { Jsonifiable } from 'type-fest';
 
 export const addContentLength =

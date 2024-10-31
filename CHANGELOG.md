@@ -1,148 +1,149 @@
-#### 0.0.21 (2024-01-12)
+# Changelog
 
-##### Chores
+## 0.0.21 (2024-01-12)
 
-*  remove deps (fa19ba72)
-*  upgrade deps (8800aca8)
+### Chores
 
-#### 0.0.20 (2024-01-07)
+* remove deps (fa19ba72)
+* upgrade deps (8800aca8)
 
-##### Bug Fixes
+## 0.0.20 (2024-01-07)
 
-*  update readme for setup file examples (8441d8fb)
+### Bug Fixes
 
-#### 0.0.19 (2024-01-07)
+* update readme for setup file examples (8441d8fb)
 
-##### Bug Fixes
+## 0.0.19 (2024-01-07)
 
-*  make sub path export keys relative (7671d5b4)
+### Bug Fixes
 
-#### 0.0.18 (2023-12-16)
+* make sub path export keys relative (7671d5b4)
 
-##### Bug Fixes
+## 0.0.18 (2023-12-16)
 
-*  bump pnpm version in pipeline (5832d14e)
-*  dual package support (61edda25)
-*  typo in package json (a94a37f0)
+### Bug Fixes
 
-#### 0.0.17 (2023-11-23)
+* bump pnpm version in pipeline (5832d14e)
+* dual package support (61edda25)
+* typo in package json (a94a37f0)
 
-##### Bug Fixes
+## 0.0.17 (2023-11-23)
 
-*  normalise headers and method for matcher (7beb86e7)
+### Bug Fixes
 
-#### 0.0.16 (2023-11-23)
+* normalise headers and method for matcher (7beb86e7)
 
-##### Bug Fixes
+## 0.0.16 (2023-11-23)
 
-*  update readme for testSetup use (995e1c38)
+### Bug Fixes
 
-#### 0.0.15 (2023-11-23)
+* update readme for testSetup use (995e1c38)
 
-##### Bug Fixes
+## 0.0.15 (2023-11-23)
 
-*  add testSetup to export map (1e6704ca)
-*  remove redundant deps (c0f7ed0a)
+### Bug Fixes
 
-#### 0.0.14 (2023-11-22)
+* add testSetup to export map (1e6704ca)
+* remove redundant deps (c0f7ed0a)
 
-##### New Features
+## 0.0.14 (2023-11-22)
 
-*  upgrade syncpack (53be56c3)
+### New Features
 
-#### 0.0.13 (2023-11-22)
+* upgrade syncpack (53be56c3)
 
-##### New Features
+## 0.0.13 (2023-11-22)
 
-*  move to exports map and provide cjs output (1e67e61c)
+### New Features
 
-#### 0.0.12 (2023-11-06)
+* move to exports map and provide cjs output (1e67e61c)
 
-##### Bug Fixes
+## 0.0.12 (2023-11-06)
 
-*  to lower case headers as part of normalisation (a4d44b2f)
+### Bug Fixes
 
-#### 0.0.11 (2023-11-05)
+* to lower case headers as part of normalisation (a4d44b2f)
 
-##### Bug Fixes
+## 0.0.11 (2023-11-05)
 
-*  export responsetype enum (2c310f69)
+### Bug Fixes
 
-#### 0.0.10 (2023-11-05)
+* export responsetype enum (2c310f69)
 
-##### New Features
+## 0.0.10 (2023-11-05)
 
-*  add content length (8edb5c54)
+### New Features
 
-#### 0.0.9 (2023-11-04)
+* add content length (8edb5c54)
 
-##### Bug Fixes
+## 0.0.9 (2023-11-04)
 
-*  way type fest type is re exported (19a57cdd)
-*  export jsonifiable and add type fest to deps (d11f5855)
+### Bug Fixes
 
-#### 0.0.8 (2023-11-04)
+* way type fest type is re exported (19a57cdd)
+* export jsonifiable and add type fest to deps (d11f5855)
 
-##### Bug Fixes
+## 0.0.8 (2023-11-04)
 
-*  tolowercase method name before match (981c4cd2)
+### Bug Fixes
 
-#### 0.0.7 (2023-11-04)
+* tolowercase method name before match (981c4cd2)
 
-##### Bug Fixes
+## 0.0.7 (2023-11-04)
 
-*  remove deps on test libs in type file (79997426)
+### Bug Fixes
 
-#### 0.0.6 (2023-11-04)
+* remove deps on test libs in type file (79997426)
 
-##### Documentation Changes
+## 0.0.6 (2023-11-04)
 
-*  update README.md (46e4aaac)
+### Documentation Changes
 
-##### New Features
+* update README.md (46e4aaac)
 
-*  add polyfill function (c1f16649)
+### New Features
 
-#### 0.0.5 (2023-10-23)
+* add polyfill function (c1f16649)
 
-##### New Features
+## 0.0.5 (2023-10-23)
 
-*  add custom property matcher (030c743e)
+### New Features
 
-#### 0.0.4 (2023-10-22)
+* add custom property matcher (030c743e)
 
-##### Chores
+## 0.0.4 (2023-10-22)
 
-*  save work in progress (c43237fa)
-*  save work in progress (af965e27)
+### Chores
 
-##### Documentation Changes
+* save work in progress (c43237fa)
+* save work in progress (af965e27)
 
-*  minor readme updates (38015b55)
-*  finish readme and minor code updates (fd221a18)
+### Documentation Changes
 
-##### New Features
+* minor readme updates (38015b55)
+* finish readme and minor code updates (fd221a18)
 
-*  finish implementation and tests (8195d787)
-*  add additional functionality (385ba8e7)
+### New Features
 
-#### 0.0.3 (2023-10-16)
+* finish implementation and tests (8195d787)
+* add additional functionality (385ba8e7)
 
-##### Chores
+## 0.0.3 (2023-10-16)
 
-*  change name of project (436b4da3)
+### Chores
 
-#### 0.0.2 (2023-10-16)
+* change name of project (436b4da3)
 
-##### Documentation Changes
+## 0.0.2 (2023-10-16)
 
-*  minor readme update (d587d8f8)
+### Documentation Changes
 
-##### New Features
+* minor readme update (d587d8f8)
 
-*  add initial files (98d4f226)
+### New Features
 
-##### Bug Fixes
+* add initial files (98d4f226)
 
-*  add flag to pass with no tests (821cd225)
+### Bug Fixes
 
+* add flag to pass with no tests (821cd225)

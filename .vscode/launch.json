@@ -11,6 +11,7 @@
       ],
       "env": {
         "DEBUG": "true",
+        "COMPILER": "swc",
         "NODE_OPTIONS": "--experimental-vm-modules"
       },
       "console": "integratedTerminal",
@@ -26,6 +27,10 @@
         "${relativeFile}",
         "--run"
       ],
+      "env": {
+        "DEBUG": "true",
+        "COMPILER": "swc"
+      },
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     },

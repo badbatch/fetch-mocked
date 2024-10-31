@@ -1,76 +1,71 @@
 import { isBoolean, isFunction, isNumber, isPlainObject, isRegExp, isString } from 'lodash-es';
+// vitest cannot handle inline type specifiers from type-only packages.
+// eslint-disable-next-line import-x/consistent-type-specifier-style
 import type { JsonArray, JsonObject, Jsonifiable } from 'type-fest';
 import { type ZodTypeAny, z } from 'zod';
-import type { MatcherObj, MatcherRecursiveObj, MatcherValueFunc } from '../types/index.ts';
+import { type MatcherObj, type MatcherRecursiveObj, type MatcherValueFunc } from '../types/index.ts';
 import { areArrayEntriesSameType } from './areArrayEntriesSameType.ts';
 
 const IS_REGEX = /^\/.+\/[dgimsuvy]*$/;
+const isArray = (value: unknown): value is JsonArray => Array.isArray(value);
+const isObject = (value: unknown): value is JsonObject => isPlainObject(value);
 
 const typeofToZodType = (value?: Jsonifiable | RegExp | MatcherValueFunc | MatcherRecursiveObj): ZodTypeAny => {
   switch (true) {
     case isRegExp(value): {
-      const castValue = value as RegExp;
-      return z.string().regex(castValue);
+      return z.string().regex(value);
     }
 
     case isString(value): {
-      const castValue = value as string;
-
-      if (castValue === '*') {
+      if (value === '*') {
         return z.string();
       }
 
-      if (castValue.startsWith('*')) {
-        return z.string().endsWith(castValue.slice(1));
+      if (value.startsWith('*')) {
+        return z.string().endsWith(value.slice(1));
       }
 
-      if (castValue.endsWith('*')) {
-        return z.string().startsWith(castValue.slice(0, -1));
+      if (value.endsWith('*')) {
+        return z.string().startsWith(value.slice(0, -1));
       }
 
-      if (IS_REGEX.test(castValue)) {
-        return z.string().regex(new RegExp(castValue.slice(1, -1)));
+      if (IS_REGEX.test(value)) {
+        return z.string().regex(new RegExp(value.slice(1, -1)));
       }
 
-      return z.literal(castValue);
+      return z.literal(value);
     }
 
     case isNumber(value): {
-      const castValue = value as number;
-      return z.literal(castValue);
+      return z.literal(value);
     }
 
     case isBoolean(value): {
-      const castValue = value as boolean;
-      return z.literal(castValue);
+      return z.literal(value);
     }
 
     case isFunction(value): {
-      const castValue = value as MatcherValueFunc;
-      return z.custom(castValue);
+      return z.custom(value);
     }
 
-    case Array.isArray(value): {
-      const castValue = value as JsonArray;
-
-      if (areArrayEntriesSameType(castValue)) {
-        return z.array(typeofToZodType(castValue[0]));
+    case isArray(value): {
+      if (areArrayEntriesSameType(value)) {
+        return z.array(typeofToZodType(value[0]));
       } else {
-        const zodTypes = castValue.map(entry => typeofToZodType(entry)) as [ZodTypeAny, ...ZodTypeAny[]];
+        // Need to force to tuple type as typescript not inferring.
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        const zodTypes = value.map(entry => typeofToZodType(entry)) as [ZodTypeAny, ...ZodTypeAny[]];
         return z.tuple(zodTypes);
       }
     }
 
-    case isPlainObject(value): {
-      const castValue = value as JsonObject;
-
+    case isObject(value): {
       return z.object(
-        // eslint-disable-next-line unicorn/no-array-reduce
-        Object.keys(castValue).reduce((acc: Record<string, ZodTypeAny>, key) => {
-          acc[key] = typeofToZodType(castValue[key]);
+        Object.keys(value).reduce((acc: Record<string, ZodTypeAny>, key) => {
+          acc[key] = typeofToZodType(value[key]);
 
           return acc;
-        }, {})
+        }, {}),
       );
     }
 
@@ -82,9 +77,10 @@ const typeofToZodType = (value?: Jsonifiable | RegExp | MatcherValueFunc | Match
 
 export const jsonToZod = (matcher: MatcherObj) =>
   z.object(
-    // eslint-disable-next-line unicorn/no-array-reduce
     Object.keys(matcher).reduce((acc: Record<string, ZodTypeAny>, key) => {
+      // typescript not inferring key is a key of MatcherObj.
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       acc[key] = typeofToZodType(matcher[key as keyof MatcherObj]);
       return acc;
-    }, {})
+    }, {}),
   );

@@ -1,7 +1,9 @@
+// vitest cannot handle inline type specifiers from type-only packages.
+// eslint-disable-next-line import-x/consistent-type-specifier-style
 import type { Jsonifiable } from 'type-fest';
-import type { ZodObject, ZodTypeAny } from 'zod';
-import type { ResponseType } from '../enums.ts';
-import type { FunctionLike, MockedFunction } from './mock.ts';
+import { type ZodObject, type ZodTypeAny } from 'zod';
+import { type ResponseType } from '../enums.ts';
+import { type FunctionLike, type MockedFunction } from './mock.ts';
 
 export type FallbackHanderOptions = {
   mockOptions: MockFetchOptions;
@@ -14,7 +16,7 @@ export type ImplicitMethodMatcher = Omit<MatcherObj, 'method'> | RegExp | string
 export type ImplicitMethodMockSignature = (
   matcher: ImplicitMethodMatcher,
   resOptions?: ResponseOptions,
-  mockOptions?: MockOptions
+  mockOptions?: MockOptions,
 ) => MockFetch;
 
 export type Matcher = MatcherObj | RegExp | string | MatcherFunc;
@@ -78,7 +80,7 @@ export type MockFetchOptions = {
 
 export type MockImplementation = (
   requestInfo: RequestInfo | URL,
-  requestInit?: RequestInit
+  requestInit?: RequestInit,
 ) => MockImplementationCheckpoint;
 
 export type MockImplementationCheckpoint = {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.23 (2024-11-02)
+
+### Chores
+
+* bump repodog ts config dep (607a2751)
+
 ## 0.0.22 (2024-10-31)
 
 ### Bug Fixes

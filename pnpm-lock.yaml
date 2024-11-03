@@ -111,9 +111,6 @@ importers:
       jest-environment-node:
         specifier: ^29.7.0
         version: 29.7.0
-      jest-mock:
-        specifier: ^29.7.0
-        version: 29.7.0
       markdownlint-cli2:
         specifier: ^0.14.0
         version: 0.14.0

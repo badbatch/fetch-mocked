@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.26 (2024-11-03)
+
+### Chores
+
+* remove unnecessary dep (05c3e3a9)
+
 ## 0.0.25 (2024-11-03)
 
 ### Chores

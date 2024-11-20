@@ -1,7 +1,7 @@
 {
   "name": "fetch-mocked",
   "description": "A test framework integrated fetch mocking solution.",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "author": "Dylan Aubrey",
   "license": "MIT",
   "homepage": "https://github.com/badbatch/fetch-mocked",

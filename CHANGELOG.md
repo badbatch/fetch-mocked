@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.27 (2024-11-20)
+
+### Bug Fixes
+
+* remove postinstall script (2b642e36)
+
 ## 0.0.26 (2024-11-03)
 
 ### Chores

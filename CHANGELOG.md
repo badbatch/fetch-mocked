@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.0.28 (2025-05-28)
+
+### Chores
+
+* **deps:**
+  * bump the npm_and_yarn group across 1 directory with 2 updates (f1548abb)
+  * bump vite in the npm_and_yarn group across 1 directory (92c5b8e0)
+  * bump nanoid in the npm_and_yarn group across 1 directory (7388aa7f)
+  * bump cross-spawn (bbccd3d1)
+  * bump @eslint/plugin-kit (76289216)
+
+### Bug Fixes
+
+* vulnerabilities (259543c2)
+* vulnerabilities (292ebfb5)
+
 ## 0.0.27 (2024-11-20)
 
 ### Bug Fixes

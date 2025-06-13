@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.29 (2025-06-13)
+
+### Chores
+
+* minor update (bce815cf)
+
 ## 0.0.28 (2025-05-28)
 
 ### Chores

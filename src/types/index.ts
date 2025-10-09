@@ -85,7 +85,7 @@ export type MockImplementation = (
 
 export type MockImplementationCheckpoint = {
   isMatch: boolean;
-  resolve: () => Promise<Response>;
+  resolve: (() => Promise<Response>) | undefined;
 };
 
 export type MockOptions = {

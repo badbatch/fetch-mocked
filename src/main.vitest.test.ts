@@ -651,6 +651,50 @@ describe('fetch-mocked', () => {
         });
       });
 
+      describe('when the response options is a function', () => {
+        let res: Response;
+        let callbackArgs: unknown[];
+
+        beforeEach(async () => {
+          mockedFetch.mockRequest('/test', (...args) => {
+            callbackArgs = args;
+
+            return {
+              body: 'Oops!',
+              headers: { 'x-test': 'alpha' },
+              status: 401,
+              statusText: 'Unauthorized',
+            };
+          });
+
+          res = await fetch('/test');
+        });
+
+        it('should get passed the correct args in the response options callback', () => {
+          expect(callbackArgs).toEqual(['/test', undefined]);
+        });
+
+        it('should return the correct body in the response', async () => {
+          await expect(res.json()).resolves.toBe('Oops!');
+        });
+
+        it('should return the correct headers in the response', () => {
+          expect([...res.headers]).toEqual([
+            ['content-length', '7'],
+            ['content-type', 'application/json'],
+            ['x-test', 'alpha'],
+          ]);
+        });
+
+        it('should have the correct status in the response', () => {
+          expect(res.status).toBe(401);
+        });
+
+        it('should have the correct status text in the response', () => {
+          expect(res.statusText).toBe('Unauthorized');
+        });
+      });
+
       describe('when response options is an object', () => {
         let res: Response;
 

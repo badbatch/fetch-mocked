@@ -6,7 +6,7 @@ import { injectMethod } from './helpers/injectMethod.ts';
 import { mockClearLastCall } from './helpers/mockClearLastCall.ts';
 import { normaliseMatcherObj } from './helpers/normaliseMatcherObj.ts';
 import { normaliseMethod, normaliseUrl } from './helpers/normaliseRequest.ts';
-import { normaliseRequestOptions } from './helpers/normaliseRequestOptions.ts';
+import { normaliseResponseOptions } from './helpers/normaliseResponseOptions.ts';
 import { transformMatcherObjToZod } from './helpers/transformMatcherObjToZod.ts';
 import {
   type ImplicitMethodMatcher,
@@ -119,7 +119,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     activeMocks.push([
       createMockImplementation(
         transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'delete')),
-        normaliseRequestOptions(resOptions),
+        normaliseResponseOptions(resOptions),
         mockOptions,
       ),
       createCounter(mockOptions?.times),
@@ -138,7 +138,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     activeMocks.push([
       createMockImplementation(
         transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'delete')),
-        normaliseRequestOptions(resOptions),
+        normaliseResponseOptions(resOptions),
         mockOptions,
       ),
       createCounter(1),
@@ -153,7 +153,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     activeMocks.push([
       createMockImplementation(
         transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'get')),
-        normaliseRequestOptions(resOptions),
+        normaliseResponseOptions(resOptions),
         mockOptions,
       ),
       createCounter(mockOptions?.times),
@@ -172,7 +172,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     activeMocks.push([
       createMockImplementation(
         transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'get')),
-        normaliseRequestOptions(resOptions),
+        normaliseResponseOptions(resOptions),
         mockOptions,
       ),
       createCounter(1),
@@ -187,7 +187,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     activeMocks.push([
       createMockImplementation(
         transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'post')),
-        normaliseRequestOptions(resOptions),
+        normaliseResponseOptions(resOptions),
         mockOptions,
       ),
       createCounter(mockOptions?.times),
@@ -206,7 +206,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     activeMocks.push([
       createMockImplementation(
         transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'post')),
-        normaliseRequestOptions(resOptions),
+        normaliseResponseOptions(resOptions),
         mockOptions,
       ),
       createCounter(1),
@@ -221,7 +221,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     activeMocks.push([
       createMockImplementation(
         transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'put')),
-        normaliseRequestOptions(resOptions),
+        normaliseResponseOptions(resOptions),
         mockOptions,
       ),
       createCounter(mockOptions?.times),
@@ -240,7 +240,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     activeMocks.push([
       createMockImplementation(
         transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'put')),
-        normaliseRequestOptions(resOptions),
+        normaliseResponseOptions(resOptions),
         mockOptions,
       ),
       createCounter(1),
@@ -255,7 +255,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     activeMocks.push([
       createMockImplementation(
         transformMatcherObjToZod(normaliseMatcherObj(matcher)),
-        normaliseRequestOptions(resOptions),
+        normaliseResponseOptions(resOptions),
         mockOptions,
       ),
       createCounter(mockOptions?.times),
@@ -270,7 +270,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     activeMocks.push([
       createMockImplementation(
         transformMatcherObjToZod(normaliseMatcherObj(matcher)),
-        normaliseRequestOptions(resOptions),
+        normaliseResponseOptions(resOptions),
         mockOptions,
       ),
       createCounter(1),

@@ -114,9 +114,11 @@ export type NormalisedRequest = {
   url: string;
 };
 
+export type ResponseOptionsFunc = (requestInfo: RequestInfo | URL, requestInit?: RequestInit) => ResponseOptionsObj;
+
 export type ResponseOptionsObj = ResponseInit & { body?: Jsonifiable };
 
-export type ResponseOptions = ResponseOptionsObj | number | string;
+export type ResponseOptions = ResponseOptionsFunc | ResponseOptionsObj | number | string;
 
 // eslint-disable-next-line unicorn/prefer-export-from
 export { type Jsonifiable };

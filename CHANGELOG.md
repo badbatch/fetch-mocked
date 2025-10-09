@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.31 (2025-10-09)
+
+### Bug Fixes
+
+* only run response options callback if there is a match (c4bffff6)
+
 ## 0.0.30 (2025-10-09)
 
 ### Chores

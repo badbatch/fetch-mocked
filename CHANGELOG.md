@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.0.30 (2025-10-09)
+
+### Chores
+
+* force commit (766708f6)
+
+### New Features
+
+* support callback for response options (e2f0fd79)
+
 ## 0.0.29 (2025-06-13)
 
 ### Chores

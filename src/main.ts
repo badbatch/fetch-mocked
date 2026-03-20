@@ -22,6 +22,12 @@ import {
 const globalFetch = globalThis.fetch;
 export let activeMocks: [MockImplementation, { limit: number; total: number }][] = [];
 
+const abortError = () => {
+  return typeof DOMException === 'undefined'
+    ? Object.assign(new Error('The operation was aborted.'), { name: 'AbortError' })
+    : new DOMException('The operation was aborted.', 'AbortError');
+};
+
 export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetchOptions) => {
   // Struggling to type this correctly.
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
@@ -42,63 +48,81 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     warnOnFallback = false,
   } = mockFetchOptions ?? {};
 
-  const mockImplementation = async (requestInfo: RequestInfo | URL, requestInit?: RequestInit) => {
-    let resolve: (() => Promise<Response>) | undefined;
-
-    const index = activeMocks.findIndex(([mockImp]) => {
-      const result = mockImp(requestInfo, requestInit);
-
-      if (result.isMatch) {
-        resolve = result.resolve;
+  const mockImplementation = async (requestInfo: RequestInfo | URL, requestInit?: RequestInit): Promise<Response> => {
+    return new Promise((resolve, reject) => {
+      if (requestInit?.signal?.aborted) {
+        reject(abortError());
+        return;
       }
 
-      return result.isMatch;
-    });
+      const onAbort = () => {
+        reject(abortError());
+      };
 
-    if (index !== -1 && resolve) {
-      // In this context activeMocks[index] will not be undefined.
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const [, counter] = activeMocks[index]!;
-      counter.total += 1;
+      requestInit?.signal?.addEventListener('abort', onAbort);
 
-      if (counter.total === counter.limit) {
-        activeMocks.splice(index, 1);
-      }
+      let mockImpResolve: (() => Promise<Response>) | undefined;
 
-      return resolve();
-    }
+      const index = activeMocks.findIndex(([mockImp]) => {
+        const result = mockImp(requestInfo, requestInit);
 
-    mockClearLastCall(mockedFetch);
+        if (result.isMatch) {
+          mockImpResolve = result.resolve;
+        }
 
-    if (isFunction(fallbackHandler)) {
-      fallbackHandler({
-        mockOptions: {
-          fallbackToNetwork,
-          responseType,
-          warnOnFallback,
-        },
-        requestInfo,
-        requestInit,
+        return result.isMatch;
       });
-    }
 
-    if (!fallbackToNetwork) {
-      throw new Error(
-        `fetch-mocked => the ${normaliseMethod(requestInit)} request to ${normaliseUrl(
+      if (index !== -1 && mockImpResolve) {
+        // In this context activeMocks[index] will not be undefined.
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const [, counter] = activeMocks[index]!;
+        counter.total += 1;
+
+        if (counter.total === counter.limit) {
+          activeMocks.splice(index, 1);
+        }
+
+        resolve(mockImpResolve());
+        return;
+      }
+
+      mockClearLastCall(mockedFetch);
+
+      if (isFunction(fallbackHandler)) {
+        fallbackHandler({
+          mockOptions: {
+            fallbackToNetwork,
+            responseType,
+            warnOnFallback,
+          },
           requestInfo,
-        )} was not covered by any of the matchers.`,
-      );
-    }
+          requestInit,
+        });
+      }
 
-    if (warnOnFallback) {
-      console.warn(
-        `fetch-mocked => the ${normaliseMethod(requestInit)} request to ${normaliseUrl(
-          requestInfo,
-        )} was not covered by any of the matchers, falling back to network.`,
-      );
-    }
+      if (!fallbackToNetwork) {
+        reject(
+          new Error(
+            `fetch-mocked => the ${normaliseMethod(requestInit)} request to ${normaliseUrl(
+              requestInfo,
+            )} was not covered by any of the matchers.`,
+          ),
+        );
 
-    return globalFetch(requestInfo, requestInit);
+        return;
+      }
+
+      if (warnOnFallback) {
+        console.warn(
+          `fetch-mocked => the ${normaliseMethod(requestInit)} request to ${normaliseUrl(
+            requestInfo,
+          )} was not covered by any of the matchers, falling back to network.`,
+        );
+      }
+
+      resolve(globalFetch(requestInfo, requestInit));
+    });
   };
 
   const applyMockImplementation = () => {

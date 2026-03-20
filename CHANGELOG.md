@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.32 (2026-03-20)
+
+### New Features
+
+* support abort signal (0fe02c34)
+
 ## 0.0.31 (2025-10-09)
 
 ### Bug Fixes

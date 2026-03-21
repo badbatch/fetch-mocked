@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.33 (2026-03-21)
+
+### Bug Fixes
+
+* support for abort controller (7d042f79)
+
 ## 0.0.32 (2026-03-20)
 
 ### New Features

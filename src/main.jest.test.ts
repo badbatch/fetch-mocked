@@ -1246,4 +1246,30 @@ describe('fetch-mocked', () => {
       });
     });
   });
+
+  describe('fetch options', () => {
+    describe('abort signal', () => {
+      describe('when an abort signal is provided', () => {
+        let controller: AbortController;
+        let fetchTimer: ReturnType<typeof setTimeout>;
+
+        beforeEach(() => {
+          mockedFetch.mockRequest('/test', 'Hello world!', { delay: 200 });
+          controller = new AbortController();
+
+          fetchTimer = setTimeout(() => {
+            controller.abort();
+          }, 100);
+        });
+
+        afterEach(() => {
+          clearTimeout(fetchTimer);
+        });
+
+        it('should throw the expected error', async () => {
+          await expect(fetch('/test', { signal: controller.signal })).rejects.toThrow('The operation was aborted.');
+        });
+      });
+    });
+  });
 });

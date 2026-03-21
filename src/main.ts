@@ -22,12 +22,6 @@ import {
 const globalFetch = globalThis.fetch;
 export let activeMocks: [MockImplementation, { limit: number; total: number }][] = [];
 
-const abortError = () => {
-  return typeof DOMException === 'undefined'
-    ? Object.assign(new Error('The operation was aborted.'), { name: 'AbortError' })
-    : new DOMException('The operation was aborted.', 'AbortError');
-};
-
 export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetchOptions) => {
   // Struggling to type this correctly.
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
@@ -50,14 +44,28 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
 
   const mockImplementation = async (requestInfo: RequestInfo | URL, requestInit?: RequestInit): Promise<Response> => {
     return new Promise((resolve, reject) => {
-      if (requestInit?.signal?.aborted) {
-        reject(abortError());
-        return;
-      }
+      let settled = false;
+
+      const cleanup = () => {
+        requestInit?.signal?.removeEventListener('abort', onAbort);
+      };
 
       const onAbort = () => {
-        reject(abortError());
+        if (settled) {
+          return;
+        }
+
+        settled = true;
+        cleanup();
+        const error = new Error('The operation was aborted.');
+        error.name = 'AbortError';
+        reject(error);
       };
+
+      if (requestInit?.signal?.aborted) {
+        onAbort();
+        return;
+      }
 
       requestInit?.signal?.addEventListener('abort', onAbort);
 
@@ -73,6 +81,28 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
         return result.isMatch;
       });
 
+      const settleWith = (promise: Promise<Response>) => {
+        void promise
+          .then(res => {
+            if (settled) {
+              return;
+            }
+
+            settled = true;
+            cleanup();
+            resolve(res);
+          })
+          .catch((error: unknown) => {
+            if (settled) {
+              return;
+            }
+
+            settled = true;
+            cleanup();
+            reject(error instanceof Error ? error : new Error('Failed to resolve mock implementation.'));
+          });
+      };
+
       if (index !== -1 && mockImpResolve) {
         // In this context activeMocks[index] will not be undefined.
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -83,7 +113,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
           activeMocks.splice(index, 1);
         }
 
-        resolve(mockImpResolve());
+        settleWith(mockImpResolve());
         return;
       }
 
@@ -121,7 +151,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
         );
       }
 
-      resolve(globalFetch(requestInfo, requestInit));
+      settleWith(globalFetch(requestInfo, requestInit));
     });
   };
 

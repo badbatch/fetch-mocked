@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.34 (2026-07-05)
+
+### Chores
+
+* upgrade deps (ba7eb682)
+
 ## 0.0.33 (2026-03-21)
 
 ### Bug Fixes

@@ -1,5 +1,4 @@
 import { isFunction } from 'lodash-es';
-import { ResponseType } from './enums.ts';
 import { createCounter } from './helpers/createCounter.ts';
 import { createMockImplementation } from './helpers/createMockImplementation.ts';
 import { injectMethod } from './helpers/injectMethod.ts';
@@ -13,20 +12,18 @@ import {
   type Matcher,
   type MockFetch,
   type MockFetchOptions,
-  type MockFunc,
   type MockImplementation,
   type MockOptions,
   type ResponseOptions,
 } from './types/index.ts';
 
-const globalFetch = globalThis.fetch;
+const globalFetch = fetch;
 export let activeMocks: [MockImplementation, { limit: number; total: number }][] = [];
 
-export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetchOptions) => {
-  // Struggling to type this correctly.
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+export const mockFetch = <T extends () => unknown>(mockFunc: T, mockFetchOptions?: MockFetchOptions): MockFetch => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, unicorn/no-global-object-property-assignment
   const mockedFetch = (globalThis.fetch = new Proxy(mockFunc() as MockFetch, {
-    get: (obj, prop: keyof MockFetch) => {
+    get: (obj, prop: keyof MockFetch): MockFetch[keyof MockFetch] => {
       if (prop === 'mockReset') {
         activeMocks = [];
       }
@@ -38,7 +35,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
   const {
     fallbackHandler,
     fallbackToNetwork = false,
-    responseType = ResponseType.JSON,
+    responseType = 'json',
     warnOnFallback = false,
   } = mockFetchOptions ?? {};
 
@@ -46,11 +43,11 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     return new Promise((resolve, reject) => {
       let settled = false;
 
-      const cleanup = () => {
+      const cleanup = (): void => {
         requestInit?.signal?.removeEventListener('abort', onAbort);
       };
 
-      const onAbort = () => {
+      const onAbort = (): void => {
         if (settled) {
           return;
         }
@@ -58,6 +55,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
         settled = true;
         cleanup();
         const error = new Error('The operation was aborted.');
+        // eslint-disable-next-line unicorn/no-error-property-assignment
         error.name = 'AbortError';
         reject(error);
       };
@@ -81,8 +79,10 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
         return result.isMatch;
       });
 
-      const settleWith = (promise: Promise<Response>) => {
+      const settleWith = (promise: Promise<Response>): void => {
         void promise
+          // In this situation I'd rather leave this
+          // eslint-disable-next-line unicorn/prefer-await
           .then(res => {
             if (settled) {
               return;
@@ -92,6 +92,8 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
             cleanup();
             resolve(res);
           })
+          // In this situation I'd rather leave this
+          // eslint-disable-next-line unicorn/prefer-await
           .catch((error: unknown) => {
             if (settled) {
               return;
@@ -155,7 +157,7 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     });
   };
 
-  const applyMockImplementation = () => {
+  const applyMockImplementation = (): void => {
     if (mockedFetch.getMockImplementation() === mockImplementation) {
       return;
     }
@@ -167,15 +169,12 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     matcher: ImplicitMethodMatcher,
     resOptions?: ResponseOptions,
     mockOptions?: MockOptions,
-  ) => {
+  ): MockFetch => {
     applyMockImplementation();
+    const zodObj = transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'delete'));
 
     activeMocks.push([
-      createMockImplementation(
-        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'delete')),
-        normaliseResponseOptions(resOptions),
-        mockOptions,
-      ),
+      createMockImplementation(zodObj, normaliseResponseOptions(resOptions), mockOptions),
       createCounter(mockOptions?.times),
     ]);
 
@@ -186,30 +185,28 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     matcher: ImplicitMethodMatcher,
     resOptions?: ResponseOptions,
     mockOptions?: MockOptions,
-  ) => {
+  ): MockFetch => {
     applyMockImplementation();
+    const zodObj = transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'delete'));
 
     activeMocks.push([
-      createMockImplementation(
-        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'delete')),
-        normaliseResponseOptions(resOptions),
-        mockOptions,
-      ),
+      createMockImplementation(zodObj, normaliseResponseOptions(resOptions), mockOptions),
       createCounter(1),
     ]);
 
     return mockedFetch;
   };
 
-  mockedFetch.mockGet = (matcher: ImplicitMethodMatcher, resOptions?: ResponseOptions, mockOptions?: MockOptions) => {
+  mockedFetch.mockGet = (
+    matcher: ImplicitMethodMatcher,
+    resOptions?: ResponseOptions,
+    mockOptions?: MockOptions,
+  ): MockFetch => {
     applyMockImplementation();
+    const zodObj = transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'get'));
 
     activeMocks.push([
-      createMockImplementation(
-        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'get')),
-        normaliseResponseOptions(resOptions),
-        mockOptions,
-      ),
+      createMockImplementation(zodObj, normaliseResponseOptions(resOptions), mockOptions),
       createCounter(mockOptions?.times),
     ]);
 
@@ -220,30 +217,28 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     matcher: ImplicitMethodMatcher,
     resOptions?: ResponseOptions,
     mockOptions?: MockOptions,
-  ) => {
+  ): MockFetch => {
     applyMockImplementation();
+    const zodObj = transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'get'));
 
     activeMocks.push([
-      createMockImplementation(
-        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'get')),
-        normaliseResponseOptions(resOptions),
-        mockOptions,
-      ),
+      createMockImplementation(zodObj, normaliseResponseOptions(resOptions), mockOptions),
       createCounter(1),
     ]);
 
     return mockedFetch;
   };
 
-  mockedFetch.mockPost = (matcher: ImplicitMethodMatcher, resOptions?: ResponseOptions, mockOptions?: MockOptions) => {
+  mockedFetch.mockPost = (
+    matcher: ImplicitMethodMatcher,
+    resOptions?: ResponseOptions,
+    mockOptions?: MockOptions,
+  ): MockFetch => {
     applyMockImplementation();
+    const zodObj = transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'post'));
 
     activeMocks.push([
-      createMockImplementation(
-        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'post')),
-        normaliseResponseOptions(resOptions),
-        mockOptions,
-      ),
+      createMockImplementation(zodObj, normaliseResponseOptions(resOptions), mockOptions),
       createCounter(mockOptions?.times),
     ]);
 
@@ -254,30 +249,28 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     matcher: ImplicitMethodMatcher,
     resOptions?: ResponseOptions,
     mockOptions?: MockOptions,
-  ) => {
+  ): MockFetch => {
     applyMockImplementation();
+    const zodObj = transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'post'));
 
     activeMocks.push([
-      createMockImplementation(
-        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'post')),
-        normaliseResponseOptions(resOptions),
-        mockOptions,
-      ),
+      createMockImplementation(zodObj, normaliseResponseOptions(resOptions), mockOptions),
       createCounter(1),
     ]);
 
     return mockedFetch;
   };
 
-  mockedFetch.mockPut = (matcher: ImplicitMethodMatcher, resOptions?: ResponseOptions, mockOptions?: MockOptions) => {
+  mockedFetch.mockPut = (
+    matcher: ImplicitMethodMatcher,
+    resOptions?: ResponseOptions,
+    mockOptions?: MockOptions,
+  ): MockFetch => {
     applyMockImplementation();
+    const zodObj = transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'put'));
 
     activeMocks.push([
-      createMockImplementation(
-        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'put')),
-        normaliseResponseOptions(resOptions),
-        mockOptions,
-      ),
+      createMockImplementation(zodObj, normaliseResponseOptions(resOptions), mockOptions),
       createCounter(mockOptions?.times),
     ]);
 
@@ -288,52 +281,49 @@ export const mockFetch = (mockFunc: () => MockFunc, mockFetchOptions?: MockFetch
     matcher: ImplicitMethodMatcher,
     resOptions?: ResponseOptions,
     mockOptions?: MockOptions,
-  ) => {
+  ): MockFetch => {
     applyMockImplementation();
+    const zodObj = transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'put'));
 
     activeMocks.push([
-      createMockImplementation(
-        transformMatcherObjToZod(injectMethod(normaliseMatcherObj(matcher), 'put')),
-        normaliseResponseOptions(resOptions),
-        mockOptions,
-      ),
+      createMockImplementation(zodObj, normaliseResponseOptions(resOptions), mockOptions),
       createCounter(1),
     ]);
 
     return mockedFetch;
   };
 
-  mockedFetch.mockRequest = (matcher: Matcher, resOptions?: ResponseOptions, mockOptions?: MockOptions) => {
+  mockedFetch.mockRequest = (matcher: Matcher, resOptions?: ResponseOptions, mockOptions?: MockOptions): MockFetch => {
     applyMockImplementation();
+    const zodObj = transformMatcherObjToZod(normaliseMatcherObj(matcher));
 
     activeMocks.push([
-      createMockImplementation(
-        transformMatcherObjToZod(normaliseMatcherObj(matcher)),
-        normaliseResponseOptions(resOptions),
-        mockOptions,
-      ),
+      createMockImplementation(zodObj, normaliseResponseOptions(resOptions), mockOptions),
       createCounter(mockOptions?.times),
     ]);
 
     return mockedFetch;
   };
 
-  mockedFetch.mockRequestOnce = (matcher: Matcher, resOptions?: ResponseOptions, mockOptions?: MockOptions) => {
+  mockedFetch.mockRequestOnce = (
+    matcher: Matcher,
+    resOptions?: ResponseOptions,
+    mockOptions?: MockOptions,
+  ): MockFetch => {
     applyMockImplementation();
+    const zodObj = transformMatcherObjToZod(normaliseMatcherObj(matcher));
 
     activeMocks.push([
-      createMockImplementation(
-        transformMatcherObjToZod(normaliseMatcherObj(matcher)),
-        normaliseResponseOptions(resOptions),
-        mockOptions,
-      ),
+      createMockImplementation(zodObj, normaliseResponseOptions(resOptions), mockOptions),
       createCounter(1),
     ]);
 
     return mockedFetch;
   };
 
-  mockedFetch.mockRestore = () => {
+  mockedFetch.mockRestore = (): void => {
+    // This is intended
+    // eslint-disable-next-line unicorn/no-global-object-property-assignment
     globalThis.fetch = globalFetch;
   };
 

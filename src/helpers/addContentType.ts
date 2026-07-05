@@ -1,4 +1,4 @@
-import { ResponseType } from '../enums.ts';
+import { type ResponseType } from '../types/index.ts';
 
 export const addContentType =
   (responseType: ResponseType) =>
@@ -6,27 +6,27 @@ export const addContentType =
     let contentType: string;
 
     switch (responseType) {
-      case ResponseType.ARRAY_BUFFER: {
+      case 'arraybuffer': {
         contentType = 'application/octet-stream';
         break;
       }
 
-      case ResponseType.BLOB: {
+      case 'blob': {
         contentType = 'application/octet-stream';
         break;
       }
 
-      case ResponseType.FORM_DATA: {
+      case 'formdata': {
         contentType = 'application/x-www-form-urlencoded';
         break;
       }
 
-      case ResponseType.JSON: {
+      case 'json': {
         contentType = 'application/json';
         break;
       }
 
-      case ResponseType.TEXT: {
+      case 'text': {
         contentType = 'text/plain';
         break;
       }

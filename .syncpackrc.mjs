@@ -1,6 +1,6 @@
-import config from '@repodog/prettier-config';
+import config from '@repodog/syncpack-config';
 
-// Required for Prettier
+// Required for SyncPack
 // eslint-disable-next-line import-x/no-default-export
 export default {
   ...config,

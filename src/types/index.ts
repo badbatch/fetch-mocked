@@ -1,9 +1,8 @@
 // vitest cannot handle inline type specifiers from type-only packages.
 // eslint-disable-next-line import-x/consistent-type-specifier-style
 import type { Jsonifiable } from 'type-fest';
-import { type ZodObject, type ZodTypeAny } from 'zod';
-import { type ResponseType } from '../enums.ts';
-import { type FunctionLike, type MockedFunction } from './mock.ts';
+import { type ZodObject, type ZodType } from 'zod';
+import { type MockedFunction } from './mock.ts';
 
 export type FallbackHanderOptions = {
   mockOptions: MockFetchOptions;
@@ -35,9 +34,7 @@ export type MatcherRecursiveObj = { [key: string]: Jsonifiable | RegExp | Matche
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type MatcherValueFunc = (value: any) => boolean;
 
-export type MatcherZod = ZodObject<Record<string, ZodTypeAny>>;
-
-export type MockFunc = MockedFunction<FunctionLike>;
+export type MatcherZod = ZodObject<Record<string, ZodType>>;
 
 export type MockFetchBare = MockedFunction<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>;
 
@@ -67,7 +64,7 @@ export type MockFetchOptions = {
   fallbackToNetwork?: boolean;
   /**
    * The type of the response body, can be 'arraybuffer', 'blob',
-   * 'formdata', 'json' or 'text. The default is 'json'.
+   * 'formdata', 'json' or 'text. The default is 'JSON'.
    */
   responseType?: ResponseType;
   /**
@@ -85,7 +82,7 @@ export type MockImplementation = (
 
 export type MockImplementationCheckpoint = {
   isMatch: boolean;
-  resolve: (() => Promise<Response>) | undefined;
+  resolve?: () => Promise<Response>;
 };
 
 export type MockOptions = {
@@ -95,7 +92,7 @@ export type MockOptions = {
   delay?: number;
   /**
    * The type of the response body, can be 'arraybuffer', 'blob',
-   * 'formdata', 'json' or 'text. The default is 'json'.
+   * 'formdata', 'json' or 'text. The default is 'JSON'.
    */
   responseType?: ResponseType;
   /**
@@ -119,6 +116,8 @@ export type ResponseOptionsFunc = (requestInfo: RequestInfo | URL, requestInit?:
 export type ResponseOptionsObj = ResponseInit & { body?: Jsonifiable };
 
 export type ResponseOptions = ResponseOptionsFunc | ResponseOptionsObj | number | string;
+
+export type ResponseType = 'arraybuffer' | 'blob' | 'formdata' | 'json' | 'text';
 
 // eslint-disable-next-line unicorn/prefer-export-from
 export { type Jsonifiable };

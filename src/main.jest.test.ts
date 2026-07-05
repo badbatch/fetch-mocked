@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals';
 import { performance } from 'node:perf_hooks';
-import productData from './__testUtils__/data/136-7317.json';
-import { ResponseType } from './enums.ts';
+import productData from './__testUtils__/data/136-7317.json' with { type: 'json' };
+import { responseType } from './constants.ts';
 import { activeMocks, mockFetch } from './main.ts';
 
 let mockedFetch = mockFetch(jest.fn);
@@ -13,27 +13,23 @@ describe('fetch-mocked', () => {
 
   describe('mockFetch', () => {
     it('should return a mocked fetch with the correct custom methods', () => {
-      expect(mockedFetch).toEqual(
-        expect.objectContaining({
-          /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-          mock: expect.any(Object),
-          mockDelete: expect.any(Function),
-          mockDeleteOnce: expect.any(Function),
-          mockGet: expect.any(Function),
-          mockGetOnce: expect.any(Function),
-          mockPost: expect.any(Function),
-          mockPostOnce: expect.any(Function),
-          mockPut: expect.any(Function),
-          mockPutOnce: expect.any(Function),
-          mockRequest: expect.any(Function),
-          mockRequestOnce: expect.any(Function),
-          /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-        }),
-      );
+      /* eslint-disable jest/max-expects */
+      expect(mockedFetch.mock).toEqual(expect.any(Object));
+      expect(mockedFetch.mockDelete).toEqual(expect.any(Function));
+      expect(mockedFetch.mockDeleteOnce).toEqual(expect.any(Function));
+      expect(mockedFetch.mockGet).toEqual(expect.any(Function));
+      expect(mockedFetch.mockGetOnce).toEqual(expect.any(Function));
+      expect(mockedFetch.mockPost).toEqual(expect.any(Function));
+      expect(mockedFetch.mockPostOnce).toEqual(expect.any(Function));
+      expect(mockedFetch.mockPut).toEqual(expect.any(Function));
+      expect(mockedFetch.mockPutOnce).toEqual(expect.any(Function));
+      expect(mockedFetch.mockRequest).toEqual(expect.any(Function));
+      expect(mockedFetch.mockRequestOnce).toEqual(expect.any(Function));
+      /* eslint-enable jest/max-expects */
     });
 
     it('should have mocked the global fetch', () => {
-      expect(globalThis.fetch).toBe(mockedFetch);
+      expect(fetch).toBe(mockedFetch);
     });
   });
 
@@ -47,7 +43,7 @@ describe('fetch-mocked', () => {
     });
 
     it('should return the mocked fetch to its unmocked state', () => {
-      expect(globalThis.fetch).not.toBe(mockedFetch);
+      expect(fetch).not.toBe(mockedFetch);
     });
   });
 
@@ -797,7 +793,7 @@ describe('fetch-mocked', () => {
           let res: Response;
 
           beforeEach(async () => {
-            mockedFetch.mockRequest('/alpha', 'Hello world!', { responseType: ResponseType.ARRAY_BUFFER });
+            mockedFetch.mockRequest('/alpha', 'Hello world!', { responseType: responseType.ARRAY_BUFFER });
             res = await fetch('/alpha');
           });
 
@@ -806,7 +802,9 @@ describe('fetch-mocked', () => {
           });
 
           it('should return the correct body in the response', async () => {
-            expect(JSON.parse(new TextDecoder().decode(await res.arrayBuffer()))).toBe('Hello world!');
+            const textDecoder = new TextDecoder();
+            const result = await res.arrayBuffer();
+            expect(textDecoder.decode(result)).toBe('Hello world!');
           });
         });
 
@@ -814,7 +812,7 @@ describe('fetch-mocked', () => {
           let res: Response;
 
           beforeEach(async () => {
-            mockedFetch.mockRequest('/alpha', 'Hello world!', { responseType: ResponseType.BLOB });
+            mockedFetch.mockRequest('/alpha', 'Hello world!', { responseType: responseType.BLOB });
             res = await fetch('/alpha');
           });
 
@@ -827,7 +825,7 @@ describe('fetch-mocked', () => {
           let res: Response;
 
           beforeEach(async () => {
-            mockedFetch.mockRequest('/alpha', { body: { alpha: 'bravo' } }, { responseType: ResponseType.FORM_DATA });
+            mockedFetch.mockRequest('/alpha', { body: { alpha: 'bravo' } }, { responseType: responseType.FORM_DATA });
             res = await fetch('/alpha');
           });
 
@@ -840,7 +838,7 @@ describe('fetch-mocked', () => {
           let res: Response;
 
           beforeEach(async () => {
-            mockedFetch.mockRequest('/alpha', 'Hello world!', { responseType: ResponseType.TEXT });
+            mockedFetch.mockRequest('/alpha', 'Hello world!', { responseType: responseType.TEXT });
             res = await fetch('/alpha');
           });
 
@@ -968,8 +966,8 @@ describe('fetch-mocked', () => {
       expect(mockedFetch).toHaveBeenCalledTimes(3);
     });
 
-    it('should mock all requests correctly', async () => {
-      const result = await Promise.all(responses.map(res => res.status));
+    it('should mock all requests correctly', () => {
+      const result = responses.map(res => res.status);
       expect(result).toEqual([200, 200, 200]);
     });
 
@@ -1208,13 +1206,15 @@ describe('fetch-mocked', () => {
       let globalConsole: Console;
 
       beforeEach(() => {
-        globalConsole = globalThis.console;
+        globalConsole = console;
+        // eslint-disable-next-line unicorn/no-global-object-property-assignment
         globalThis.console = { warn: jest.fn() } as unknown as Console;
         mockedFetch = mockFetch(jest.fn, { fallbackToNetwork: true, warnOnFallback: true });
         mockedFetch.mockRequest('/test', 'Hello world!');
       });
 
       afterEach(() => {
+        // eslint-disable-next-line unicorn/no-global-object-property-assignment
         globalThis.console = globalConsole;
         mockedFetch = mockFetch(jest.fn);
       });

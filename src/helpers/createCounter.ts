@@ -1,1 +1,6 @@
-export const createCounter = (limit = Number.POSITIVE_INFINITY) => ({ limit, total: 0 });
+export interface Counter {
+  limit: number;
+  total: number;
+}
+
+export const createCounter = (limit = Infinity): Counter => ({ limit, total: 0 });

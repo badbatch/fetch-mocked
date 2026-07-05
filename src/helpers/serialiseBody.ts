@@ -2,10 +2,10 @@ import { isString } from 'lodash-es';
 // vitest cannot handle inline type specifiers from type-only packages.
 // eslint-disable-next-line import-x/consistent-type-specifier-style
 import type { Jsonifiable } from 'type-fest';
-import { ResponseType } from '../enums.ts';
+import { type ResponseType } from '../types/index.ts';
 import { appendFormData } from './appendFormData.ts';
 
-const stringifyBody = (body: Jsonifiable) => {
+const stringifyBody = (body: Jsonifiable): string => {
   try {
     return JSON.stringify(body);
   } catch {
@@ -13,32 +13,39 @@ const stringifyBody = (body: Jsonifiable) => {
       return body;
     }
 
-    // @ts-expect-error 'body' is possibly 'null'
-    return body.toString();
+    // Is okay in this instance
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
+    return body?.toString() ?? '';
   }
 };
 
-export const serialiseBody = (body: Jsonifiable, responseType: ResponseType) => {
+export const serialiseBody = (body: Jsonifiable, responseType: ResponseType): BodyInit | null | undefined => {
   switch (responseType) {
-    case ResponseType.ARRAY_BUFFER: {
-      return new TextEncoder().encode(stringifyBody(body));
+    case 'arraybuffer': {
+      if (!isString(body)) {
+        throw new Error('Expected the body passed into arraybuffer to be a string.');
+      }
+
+      const textEncoder = new TextEncoder();
+      return textEncoder.encode(body);
     }
 
-    case ResponseType.BLOB: {
+    case 'blob': {
       return new Blob([stringifyBody(body)]);
     }
 
-    case ResponseType.FORM_DATA: {
+    case 'formdata': {
       return appendFormData(new FormData(), body);
     }
 
-    case ResponseType.JSON: {
+    case 'json': {
       return JSON.stringify(body);
     }
 
-    case ResponseType.TEXT: {
-      // @ts-expect-error 'body' is possibly 'null'
-      return isString(body) ? body : body.toString();
+    case 'text': {
+      // Am okay with this instance
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string
+      return isString(body) ? body : (body?.toString() ?? '');
     }
   }
 };

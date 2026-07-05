@@ -3,7 +3,7 @@ import { isString } from 'lodash-es';
 // eslint-disable-next-line import-x/consistent-type-specifier-style
 import type { Jsonifiable } from 'type-fest';
 
-export const normaliseBody = (body?: BodyInit | null) => {
+export const normaliseBody = (body?: BodyInit | null): BodyInit | Jsonifiable | undefined => {
   if (!isString(body)) {
     return body;
   }
@@ -17,7 +17,7 @@ export const normaliseBody = (body?: BodyInit | null) => {
   }
 };
 
-export const normaliseHeaders = (headers?: HeadersInit) => {
+export const normaliseHeaders = (headers?: HeadersInit): Record<string, string> => {
   if (!headers) {
     return {};
   }
@@ -34,18 +34,25 @@ export const normaliseHeaders = (headers?: HeadersInit) => {
   }
 
   return Object.keys(headers).reduce<Record<string, string>>((acc, headerName) => {
-    // typescript not inferring headers[headerName] cannot be undefined.
+    // TypeScript not inferring headers[headerName] cannot be undefined.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return { ...acc, [headerName.toLowerCase()]: headers[headerName]! };
   }, {});
 };
 
-export const normaliseMethod = (requestInit?: RequestInit) => requestInit?.method?.toLowerCase() ?? 'get';
+export const normaliseMethod = (requestInit?: RequestInit): string => requestInit?.method?.toLowerCase() ?? 'get';
 
-export const normaliseUrl = (requestInfo: RequestInfo | URL) =>
+export const normaliseUrl = (requestInfo: RequestInfo | URL): string =>
   requestInfo instanceof URL ? requestInfo.href : requestInfo instanceof Request ? requestInfo.url : requestInfo;
 
-export const normaliseRequest = (requestInfo: RequestInfo | URL, requestInit?: RequestInit) => ({
+export interface NormalisedRequest {
+  body: BodyInit | Jsonifiable | undefined;
+  headers: Record<string, string>;
+  method: string;
+  url: string;
+}
+
+export const normaliseRequest = (requestInfo: RequestInfo | URL, requestInit?: RequestInit): NormalisedRequest => ({
   body: normaliseBody(requestInit?.body),
   headers: normaliseHeaders(requestInit?.headers),
   method: normaliseMethod(requestInit),

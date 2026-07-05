@@ -1,5 +1,4 @@
 import { isFunction } from 'lodash-es';
-import { ResponseType } from '../enums.ts';
 import {
   type MatcherFunc,
   type MatcherZod,
@@ -12,19 +11,24 @@ import { isSchemaValid } from './isSchemaValid.ts';
 import { normaliseHeaders, normaliseRequest } from './normaliseRequest.ts';
 import { serialiseBody } from './serialiseBody.ts';
 
+export interface MockImplementationReturnType {
+  isMatch: boolean;
+  resolve?: () => Promise<Response>;
+}
+
 export const createMockImplementation = (
   matcher: MatcherFunc | MatcherZod,
   resOptions?: ResponseOptionsFunc | ResponseOptionsObj,
   mockOptions?: MockOptions,
 ) => {
-  return (requestInfo: RequestInfo | URL, requestInit?: RequestInit) => {
+  return (requestInfo: RequestInfo | URL, requestInit?: RequestInit): MockImplementationReturnType => {
     const normalisedRequest = normaliseRequest(requestInfo, requestInit);
     const isMatch = isFunction(matcher) ? matcher(requestInfo, requestInit) : isSchemaValid(matcher, normalisedRequest);
 
     return {
       isMatch,
       resolve: isMatch
-        ? async () => {
+        ? async (): Promise<Response> => {
             const {
               body,
               headers,
@@ -32,7 +36,7 @@ export const createMockImplementation = (
               statusText,
             } = isFunction(resOptions) ? resOptions(requestInfo, requestInit) : (resOptions ?? {});
 
-            const { delay, responseType = ResponseType.JSON } = mockOptions ?? {};
+            const { delay, responseType = 'json' } = mockOptions ?? {};
             const serialisedResponseBody = body ? serialiseBody(body, responseType) : undefined;
             const responseHeadersWithDefaults = addResponseHeaders(body, normaliseHeaders(headers), responseType);
             const statusTextWithDefault = !statusText && status === 200 ? 'OK' : statusText;

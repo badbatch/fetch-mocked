@@ -3,7 +3,9 @@ import { isBoolean, isNumber, isObjectLike, isRegExp, isString, isUndefined } fr
 // eslint-disable-next-line import-x/consistent-type-specifier-style
 import type { JsonArray, JsonValue } from 'type-fest';
 
-const getEntryType = (value: JsonValue) => {
+export type EntryType = 'array' | 'regexp' | 'boolean' | 'number' | 'object' | 'string';
+
+const getEntryType = (value: JsonValue): EntryType | undefined => {
   switch (true) {
     case Array.isArray(value): {
       return 'array';
@@ -35,7 +37,7 @@ const getEntryType = (value: JsonValue) => {
   }
 };
 
-export const areArrayEntriesSameType = (value: JsonArray) => {
+export const areArrayEntriesSameType = (value: JsonArray): boolean => {
   let arrayType: string | undefined;
 
   for (const entry of value) {

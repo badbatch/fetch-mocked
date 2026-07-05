@@ -34,7 +34,7 @@ The library provides a setup file to polyfill `fetch` and the `Request`, `Respon
 ```javascript
 // jest.config.js
 module.exports = {
-  setupFilesAfterEnv: ['./node_modules/fetch-mocked/testSetup.mjs'],
+  setupFilesAfterEnv: ['fetch-mocked/testSetup.mjs'],
 };
 ```
 
@@ -42,7 +42,7 @@ module.exports = {
 // vitest.config.js
 export default defineConfig({
   test: {
-    setupFiles: ['./node_modules/fetch-mocked/testSetup.mjs'],
+    setupFiles: ['fetch-mocked/testSetup.mjs'],
   },
 });
 ```
@@ -92,12 +92,12 @@ describe('fetch-mocked', () => {
 `mockFetch` supports a second options argument used to change the way the module behaves.
 
 ```typescript
-{
+type MockFetchOptions = {
   fallbackHandler?: (options: FallbackHanderOptions) => void;
   fallbackToNetwork?: boolean;
   responseType?: 'arraybuffer' | 'blob' | 'formdata' | 'json' | 'text';
   warnOnFallback?: boolean;
-}
+};
 ```
 
 #### fallbackHandler
@@ -118,9 +118,9 @@ Whether to print a warning to the console when a request is allowed through to t
 
 ### Mock fetch requests
 
-Requests can be mocked using the generic `mockRequest` and `mockRequestOnce` utils added to the mock object. These functions take a matcher as the first argument, response options as the second, and mock options as the third. These are all detailed [here](#api).
+Requests can be mocked using the generic `mockRequest` and `mockRequestOnce` utils added to the mock object. These functions take a matcher as the first argument, response options as the second, and mock options as the third. These are all detailed in the [API documentation](#api).
 
-While you can mock any http request method using `mockRequest` and `mockRequestOnce`, `fetch-mocked` provides specific methods to mock `DELETE`, `GET`, `POST`, and `PUT` requests, which are detailed [here](#mock-utils).
+While you can mock any http request method using `mockRequest` and `mockRequestOnce`, `fetch-mocked` provides specific methods to mock `DELETE`, `GET`, `POST`, and `PUT` requests, which are detailed in the [mock utils documentation](#mock-utils).
 
 As you can see from the example below, you can use the built-in mock utils and `expect` assertions as with any mock object you create with your test framework.
 
@@ -220,12 +220,12 @@ mockedFetch.mockRequest((_url, { headers }) => !!headers.authorization, 'Hello w
 #### `Object`
 
 ```typescript
-{
-  body?: Jsonifiable | RegExp | (value: unknown) => boolean;
-  headers?: Record<string, RegExp | string | (value: unknown) => boolean>;
+type MatcherOptions = {
+  body?: Jsonifiable | RegExp | ((value: unknown) => boolean);
+  headers?: Record<string, RegExp | string | ((value: unknown) => boolean)>;
   method?: string;
-  url?: RegExp | string | (value: unknown) => boolean;
-}
+  url?: RegExp | string | ((value: unknown) => boolean);
+};
 ```
 
 It matches any request that's corresponding properties satisfy the values declared for the matcher body, headers, method and/or url. For the body and headers, `fetch-mocked` uses partial matching, meaning the request body and/or headers must have the properties in the matcher and satisfy their values, but can include other properties that will be ignored by the matcher.
@@ -272,12 +272,12 @@ mockedFetch.mockRequest('*', 404);
 #### `Object`
 
 ```typescript
-{
+type ResponseOptions = {
   body?: Jsonifiable;
   headers?: HeadersInit;
   status?: number;
   statusText?: string;
-}
+};
 ```
 
 Whatever values are provided for the body, headers, status, and/or statusText will be returned in the response. The way the body is serialised is based on the `responseType` [mock option](#mock-options). If no values are provided, the status and statusText will default to `200` and `'OK'` respectively.
@@ -294,11 +294,11 @@ mockedFetch.mockRequest('*', responseOptions);
 ### Mock options
 
 ```typescript
-{
+type MockOptions = {
   delay?: number;
   responseType?: 'arraybuffer' | 'blob' | 'formdata' | 'json' | 'text';
   times?: number;
-}
+};
 ```
 
 The mock options are used to change the way a mock behaves.

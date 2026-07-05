@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.35 (2026-07-05)
+
+### Bug Fixes
+
+* vulnerabilities (af2f7d2e)
+
 ## 0.0.34 (2026-07-05)
 
 ### Chores

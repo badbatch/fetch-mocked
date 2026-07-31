@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.36 (2026-07-31)
+
+### Chores
+
+* bump deps (8ca93ef3)
+
 ## 0.0.35 (2026-07-05)
 
 ### Bug Fixes

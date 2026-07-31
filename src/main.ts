@@ -28,6 +28,8 @@ export const mockFetch = <T extends () => unknown>(mockFunc: T, mockFetchOptions
         activeMocks = [];
       }
 
+      // The rule is arguably being overzealous.
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       return obj[prop];
     },
   }));
@@ -41,18 +43,18 @@ export const mockFetch = <T extends () => unknown>(mockFunc: T, mockFetchOptions
 
   const mockImplementation = async (requestInfo: RequestInfo | URL, requestInit?: RequestInit): Promise<Response> => {
     return new Promise((resolve, reject) => {
-      let settled = false;
+      let isSettled = false;
 
       const cleanup = (): void => {
         requestInit?.signal?.removeEventListener('abort', onAbort);
       };
 
       const onAbort = (): void => {
-        if (settled) {
+        if (isSettled) {
           return;
         }
 
-        settled = true;
+        isSettled = true;
         cleanup();
         const error = new Error('The operation was aborted.');
         // eslint-disable-next-line unicorn/no-error-property-assignment
@@ -82,24 +84,24 @@ export const mockFetch = <T extends () => unknown>(mockFunc: T, mockFetchOptions
       const settleWith = (promise: Promise<Response>): void => {
         void promise
           // In this situation I'd rather leave this
-          // eslint-disable-next-line unicorn/prefer-await
+
           .then(res => {
-            if (settled) {
+            if (isSettled) {
               return;
             }
 
-            settled = true;
+            isSettled = true;
             cleanup();
             resolve(res);
           })
           // In this situation I'd rather leave this
-          // eslint-disable-next-line unicorn/prefer-await
+
           .catch((error: unknown) => {
-            if (settled) {
+            if (isSettled) {
               return;
             }
 
-            settled = true;
+            isSettled = true;
             cleanup();
             reject(error instanceof Error ? error : new Error('Failed to resolve mock implementation.'));
           });

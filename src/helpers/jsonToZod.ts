@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { type MatcherObj, type MatcherRecursiveObj, type MatcherValueFunc, type MatcherZod } from '../types/index.ts';
 import { areArrayEntriesSameType } from './areArrayEntriesSameType.ts';
 
-const IS_REGEX = /^\/.+\/[dgimsuvy]*$/;
+const REGEX = /^\/.+\/[dgimsuvy]*$/;
 const isArray = (value: unknown): value is JsonArray => Array.isArray(value);
 const isObject = (value: unknown): value is JsonObject => isPlainObject(value);
 
@@ -29,7 +29,7 @@ const typeofToZodType = (value?: Jsonifiable | RegExp | MatcherValueFunc | Match
         return z.string().startsWith(value.slice(0, -1));
       }
 
-      if (IS_REGEX.test(value)) {
+      if (REGEX.test(value)) {
         return z.string().regex(new RegExp(value.slice(1, -1)));
       }
 

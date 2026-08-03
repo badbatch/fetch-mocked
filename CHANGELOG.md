@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.37 (2026-08-03)
+
+### Chores
+
+* bump cts types (48a156a8)
+
 ## 0.0.36 (2026-07-31)
 
 ### Chores
